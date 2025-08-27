@@ -99,6 +99,17 @@ function smoothScrollTo(target, duration = 900, offset = SCROLL_OFFSET) {
 if (scrollTopBtn) {
   scrollTopBtn.addEventListener('click', () => {
     smoothScrollTo(0, 900, 0); // scroll lento al inicio, sin offset
+
+    // Quitar 'active' de todos los botones
+    document.querySelectorAll('.filter-bar .filter-btn').forEach(btn => {
+      btn.classList.remove('active');
+    });
+
+    // Activar solo el botón "Todos"
+    const todosBtn = document.querySelector('.filter-bar .filter-btn');
+    if (todosBtn) {
+      todosBtn.classList.add('active');
+    }
   });
 }
 
