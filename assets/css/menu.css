@@ -48,19 +48,19 @@ main,
 
 @font-face {
   font-family: 'Playfair Display';
-  src: url('../fonts/PlayfairDisplay-Regular.ttf') format('truetype');
+  src: url('/restaurant_menu/assets/fonts/PlayfairDisplay-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: 'Playfair Display';
-  src: url('../fonts/PlayfairDisplay-Bold.ttf') format('truetype');
+  src: url('/restaurant_menu/assets/fonts/PlayfairDisplay-Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
 @font-face {
   font-family: 'Playfair Display';
-  src: url('../fonts/PlayfairDisplay-Italic.ttf') format('truetype');
+  src: url('/restaurant_menu/assets/fonts/PlayfairDisplay-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
 }
