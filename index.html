@@ -1,165 +1,288 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Restaurant Menu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Rey de la Salchipapa Miami</title>
     <link rel="stylesheet" href="assets/css/menu.css">
 </head>
 <body>
-    <div class="menu-bg"></div>
-    <div class="menu-header">
-        <div class="menu-banner">
-            <span class="menu-title">Restaurant Menu</span>
-            <span class="menu-sub">Demo</span>
+    <!-- LOGO -->
+    <div class="logo-absolute">
+        <img src="assets/img/logo.webp"
+             alt="El Rey de la Salchipapa Miami" 
+             class="mi-logo"
+             onerror="this.style.display='none'; document.querySelector('.logo-texto-respaldo').style.display='block';">
+        
+        <div class="logo-texto-respaldo">
+            <div class="crown"></div>
+            <div class="logo-text">
+                <div class="logo-line1">
+                    <span class="logo-el">El</span>
+                    <span class="logo-rey">Rey</span>
+                    <span class="logo-dela">de la</span>
+                </div>
+                <div class="logo-line2">
+                    <span class="logo-salchi">Salchi</span>
+                    <span class="logo-papa">papa</span>
+                </div>
+                <div class="logo-miami">Miami</div>
+            </div>
         </div>
     </div>
 
-    <div class="menu-carousel">
-        <div class="carousel-track">
-            <div class="carousel-slide active"><img src="assets/img/desserts-bg.webp" alt="Desserts"></div>
-            <div class="carousel-slide"><img src="assets/img/dinner-bg.webp" alt="Dinner"></div>
-            <div class="carousel-slide"><img src="assets/img/lunch-bg.webp" alt="Lunch"></div>
-            <div class="carousel-slide"><img src="assets/img/beverages-bg.webp" alt="Beverages"></div>
-        </div>
-        <!-- Bullets indicators for carousel -->
-        <div class="carousel-indicators"></div>
-    </div>
-
-    <main class="section-main">
-        <div class="section-cards">
-            <a href="dinner.html" class="section-card" style="background-image:url('assets/img/desserts-bg.webp')">
-                <div class="section-content">
-                    <h2>
-                        <span class="section-icon">
-                            <img src="assets/img/cocktail-white.svg" alt="Dessert" width="28" height="28" style="vertical-align:middle;">
-                        </span>
-                        Desserts
-                    </h2>
-                </div>
-            </a>
-            <a href="dinner.html" class="section-card" style="background-image:url('assets/img/dinner-bg.webp')">
-                <div class="section-content">
-                    <h2>
-                        <span class="section-icon">
-                            <img src="assets/img/dinner-pot-white.svg" alt="Dinner" width="28" height="28" style="vertical-align:middle;">
-                        </span>
-                        Dinner
-                    </h2>
-                </div>
-            </a>
-            <a href="dinner.html" class="section-card" style="background-image:url('assets/img/lunch-bg.webp')">
-                <div class="section-content">
-                    <h2>
-                        <span class="section-icon">
-                            <img src="assets/img/lunch-chef-hat-white.svg" alt="Lunch" width="28" height="28" style="vertical-align:middle;">
-                        </span>
-                        Lunch
-                    </h2>
-                </div>
-            </a>
-            <a href="dinner.html" class="section-card" style="background-image:url('assets/img/beverages-bg.webp')">
-                <div class="section-content">
-                    <h2>
-                        <span class="section-icon">
-                            <img src="assets/img/beverage-glass-white.svg" alt="Beverages" width="28" height="28" style="vertical-align:middle;">
-                        </span>
-                        Beverages
-                    </h2>
-                </div>
-            </a>
-        </div>
-    </main>
-    <footer class="menu-footer">
-        <div class="footer-content">
-            <span class="footer-title">Síguenos</span>
-            <div class="footer-social">
-                <div class="footer-icon">
-                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                        <circle cx="18" cy="18" r="18" fill="white" fill-opacity="0.05"/>
-                        <path d="M24 12h-3a2 2 0 0 0-2 2v3h5v3h-5v8h-4v-8h-3v-3h3v-3a5 5 0 0 1 5-5h3v3z" fill="#fff"/>
-                    </svg>
-                </div>
-                <div class="footer-icon">
-                    <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-                        <circle cx="18" cy="18" r="18" fill="white" fill-opacity="0.05"/>
-                        <rect x="10" y="10" width="16" height="16" rx="5" fill="none" stroke="#fff" stroke-width="2"/>
-                        <circle cx="18" cy="18" r="4" fill="none" stroke="#fff" stroke-width="2"/>
-                        <circle cx="24.5" cy="13.5" r="1.5" fill="#fff"/>
-                    </svg>
-                </div>
-                <div class="footer-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-                        <circle cx="18" cy="18" r="18" fill="#25D366" fill-opacity="0.13"/>
-                        <g>
-                            <path d="M18 10.5c-4.1 0-7.5 3.4-7.5 7.5 0 1.3.3 2.5.8 3.6l-1 3.7 3.8-.9c1.1.5 2.2.8 3.4.8 4.1 0 7.5-3.4 7.5-7.5s-3.4-7.5-7.5-7.5z" fill="#fff"/>
-                            <path d="M15 17.5c.1 1.7 1.7 3.1 3.5 3.2.2 0 .5-.1.7-.2l.9-.4c.3-.1.7 0 .9.3.3.3.8 1.1.8 1.1.1.1.1.3-.1.4-.9.7-2 .9-3.4.7-2.7-.3-4.7-2.6-5.6-5.3-.3-1.1-.2-2.1.6-2.9.1-.1.3-.1.4 0l1.1.8c.2.2.3.5.2.7l-.4.9c-.1.3 0 .7.3.9z" fill="#25D366"/>
-                        </g>
-                    </svg>
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="container">
+        <div class="carousel">
+            <div class="carousel-slide slide-1" id="slide">
+                <div class="carousel-overlay"></div>
+                <h2 class="carousel-title" id="slideTitle">Platos Gourmet</h2>
+                <div class="carousel-indicators">
+                    <div class="indicator active" onclick="goToSlide(0)"></div>
+                    <div class="indicator" onclick="goToSlide(1)"></div>
+                    <div class="indicator" onclick="goToSlide(2)"></div>
+                    <div class="indicator" onclick="goToSlide(3)"></div>
+                    <div class="indicator" onclick="goToSlide(4)"></div>
                 </div>
             </div>
         </div>
-    </footer>
+
+        <div class="menu-buttons">
+            <div class="button-row-top">
+                <button class="menu-button button-large btn-cuisine" onclick="navigateToSection('cuisine')">
+                    <div class="emoji">🍽️</div>
+                    <div class="text">Cuisine</div>
+                </button>
+                <button class="menu-button button-large btn-drinks" onclick="navigateToSection('drinks')">
+                    <div class="emoji">🍷</div>
+                    <div class="text">Drinks</div>
+                </button>
+            </div>
+            <div class="button-row-bottom">
+                <button class="menu-button button-medium btn-cocktails" onclick="navigateToSection('cocktails')">
+                    <div class="emoji">🍸</div>
+                    <div class="text">Cocktails</div>
+                </button>
+                <button class="menu-button button-medium btn-bakery" onclick="navigateToSection('bakery')">
+                    <div class="emoji">🧁</div>
+                    <div class="text">Bakery</div>
+                </button>
+                <button class="menu-button button-medium btn-togo" onclick="navigateToSection('togo')">
+                    <div class="emoji">📦</div>
+                    <div class="text">To Go Menu</div>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const track = document.querySelector('.carousel-track');
-        const slides = Array.from(track.children);
-        const indicatorsContainer = document.querySelector('.carousel-indicators');
-        let currentIndex = 0;
-        let intervalId = null;
+        let currentSlide = 0;
+        let carouselInterval;
+        let isUserInteracting = false;
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        
+        const slides = [
+            { title: '', class: 'slide-1' },
+            { title: '', class: 'slide-2' },
+            { title: '', class: 'slide-3' },
+            { title: '', class: 'slide-4' },
+            { title: '', class: 'slide-5' }
+        ];
 
-        // Crear bullets
-        slides.forEach((_, idx) => {
-            const indicator = document.createElement('button');
-            indicator.classList.add('carousel-indicator');
-            if (idx === 0) indicator.classList.add('active');
-            indicator.setAttribute('aria-label', 'Ir al slide ' + (idx + 1));
-            indicator.addEventListener('click', () => {
-                showSlide(idx);
-                restartAutoplay();
+        function updateSlide() {
+            const slideElement = document.getElementById('slide');
+            const titleElement = document.getElementById('slideTitle');
+            const indicators = document.querySelectorAll('.indicator');
+
+            slideElement.className = `carousel-slide ${slides[currentSlide].class}`;
+            titleElement.textContent = slides[currentSlide].title;
+
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
             });
-            indicatorsContainer.appendChild(indicator);
-        });
-        const indicators = Array.from(indicatorsContainer.children);
-
-        function showSlide(index) {
-            if (index < 0) index = slides.length - 1;
-            if (index >= slides.length) index = 0;
-            slides.forEach((slide, i) => {
-                slide.classList.toggle('active', i === index);
-                indicators[i].classList.toggle('active', i === index);
-            });
-            currentIndex = index;
         }
 
-        function autoplay() {
-            intervalId = setInterval(() => {
-                showSlide(currentIndex + 1);
-            }, 4000);
-        }
-        function restartAutoplay() {
-            clearInterval(intervalId);
-            autoplay();
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlide();
         }
 
-        showSlide(0);
-        autoplay();
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlide();
+        }
 
-        // Swipe para tablets/móviles
-        let startX = null;
-        track.addEventListener('touchstart', function(e) {
-            startX = e.touches[0].clientX;
-        });
-        track.addEventListener('touchend', function(e) {
-            if (startX !== null) {
-                let endX = e.changedTouches[0].clientX;
-                if (endX - startX > 50) showSlide(currentIndex - 1);
-                if (endX - startX < -50) showSlide(currentIndex + 1);
-                restartAutoplay();
-                startX = null;
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlide();
+        }
+
+        function startCarousel() {
+            if (!isUserInteracting) {
+                carouselInterval = setInterval(() => {
+                    if (!isUserInteracting) {
+                        nextSlide();
+                    }
+                }, 6000); // Cambiado de 4000ms (4s) a 6000ms (6s)
             }
+        }
+
+        function stopCarousel() {
+            clearInterval(carouselInterval);
+        }
+
+        function resumeCarousel() {
+            setTimeout(() => {
+                isUserInteracting = false;
+                startCarousel();
+            }, 2000); // Espera 2 segundos después de la interacción
+        }
+
+        // Funciones de touch/swipe
+        function handleStart(e) {
+            isDragging = true;
+            isUserInteracting = true;
+            stopCarousel();
+            
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            currentX = startX;
+        }
+
+        function handleMove(e) {
+            if (!isDragging) return;
+            
+            e.preventDefault();
+            currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        }
+
+        function handleEnd(e) {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            const diffX = currentX - startX;
+            const threshold = 50; // Mínimo movimiento para cambiar slide
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
+                    prevSlide(); // Deslizar hacia la derecha = slide anterior
+                } else {
+                    nextSlide(); // Deslizar hacia la izquierda = slide siguiente
+                }
+            }
+            
+            resumeCarousel();
+        }
+
+        function navigateToSection(section) {
+            const buttonText = {
+                'cuisine': 'Cuisine',
+                'drinks': 'Drinks', 
+                'cocktails': 'Cocktails',
+                'bakery': 'Bakery',
+                'togo': 'To Go Menu'
+            };
+            
+            // Si es Cuisine, redirigir directamente a la página
+            if (section === 'cuisine') {
+                window.location.href = 'Cuisine.html';
+                return;
+            }if (section === 'drinks') {
+                window.location.href = 'Drinks.html';
+                return;
+            }if (section === 'cocktails') {
+                window.location.href = 'Cocktails.html';
+                return;
+            }if (section === 'bakery') {
+                window.location.href = 'Bakery.html';
+                return;
+            }if (section === 'togo') {
+                window.location.href = 'ToGo.html';
+                return;
+            }
+            
+            // Para las otras secciones, mostrar notificación temporal
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 16px 24px;
+                border-radius: 12px;
+                font-size: 18px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+            `;
+            notification.textContent = `Abriendo ${buttonText[section]}...`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 1500);
+        }
+
+        // Inicializar carrusel
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar el carrusel inmediatamente
+            updateSlide();
+            
+            // Esperar un momento antes de iniciar el auto-play para evitar conflictos
+            setTimeout(() => {
+                startCarousel();
+            }, 1000);
+            
+            const carousel = document.querySelector('.carousel');
+            
+            // Eventos de mouse
+            carousel.addEventListener('mouseenter', () => {
+                isUserInteracting = true;
+                stopCarousel();
+            });
+
+            carousel.addEventListener('mouseleave', () => {
+                if (!isDragging) {
+                    resumeCarousel();
+                }
+            });
+
+            // Eventos de touch/swipe para móviles
+            carousel.addEventListener('touchstart', handleStart, { passive: false });
+            carousel.addEventListener('touchmove', handleMove, { passive: false });
+            carousel.addEventListener('touchend', handleEnd);
+
+            // Eventos de mouse para desktop
+            carousel.addEventListener('mousedown', handleStart);
+            carousel.addEventListener('mousemove', handleMove);
+            carousel.addEventListener('mouseup', handleEnd);
+            carousel.addEventListener('mouseleave', () => {
+                if (isDragging) {
+                    handleEnd();
+                }
+            });
+
+            // Mejorar los indicadores
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                indicator.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    isUserInteracting = true;
+                    stopCarousel();
+                    goToSlide(index);
+                    resumeCarousel();
+                });
+            });
+
+            // Prevenir selección de texto durante drag
+            carousel.addEventListener('selectstart', e => e.preventDefault());
+            carousel.style.userSelect = 'none';
         });
-    });
     </script>
 </body>
 </html>

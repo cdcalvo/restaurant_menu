@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cocktails - El Rey de la Salchipapa Miami</title>
+    <link rel="stylesheet" href="assets/css/menu-list.css">
+</head>
+<body>
+    <div class="header">
+        <button class="back-button" onclick="window.history.back()">&#8249;</button>
+        <h1 class="header-title">Cocktails</h1>
+    </div>
+
+    <div class="categories">
+        <div class="category-scroll">
+            <!-- Las categorías se generan automáticamente por el MenuEngine -->
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="section-title" style="display: none;"></h2>
+        <div class="menu-list">
+            <!-- Los productos se cargarán dinámicamente aquí -->
+        </div>
+    </div>
+
+    <button id="scrollToTop" class="scroll-to-top" onclick="if(window.menuEngine) window.menuEngine.scrollToTop()">↑</button>
+
+    <div id="dishModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close" onclick="if(window.menuEngine) window.menuEngine.closeModal()">&times;</button>
+            
+            <div class="modal-image-container">
+                <div class="modal-emoji" id="modalEmoji">🧀</div>
+            </div>
+            
+            <div class="modal-content">
+                <div class="modal-tags" id="modalTags">
+                    <span class="modal-tag">Vegetariano</span>
+                    <span class="modal-tag">Lactosa</span>
+                </div>
+                
+                <h2 class="modal-title" id="modalTitle">BURRATA FRITA EN CARPACCIO DE CIRUELA</h2>
+                
+                <p class="modal-description" id="modalDescription">
+                    Burrata tipo queso mozzarella rellena de stracciatella sobre un carpaccio de ciruela acompañado de praliné de nuez de nogal, pesto de la casa, arándanos y reducción de balsámico.
+                </p>
+
+                <div class="modal-price" id="modalPrice">$37.000</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/data/menu-cocktails-data.js"></script>
+    <script src="assets/js/menu-engine.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // AQUÍ SE CREA LA CONFIGURACIÓN
+            const config = {
+                data: cocktailsMenuData,
+                categoryLabels: {
+                    'all': 'All',
+                    'Cocktails': 'Cocktails',
+                },
+                viewButtonText: 'VER'
+            };
+            
+            // Crear instancia del motor
+            window.menuEngine = new MenuEngine(config);
+        });        
+    </script>
+</body>
+</html>
