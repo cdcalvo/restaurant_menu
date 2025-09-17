@@ -126,7 +126,7 @@
                     if (!isUserInteracting) {
                         nextSlide();
                     }
-                }, 6000); // Cambiado de 4000ms (4s) a 6000ms (6s)
+                }, 6000);
             }
         }
 
@@ -138,7 +138,7 @@
             setTimeout(() => {
                 isUserInteracting = false;
                 startCarousel();
-            }, 2000); // Espera 2 segundos después de la interacción
+            }, 2000);
         }
 
         // Funciones de touch/swipe
@@ -163,19 +163,20 @@
             
             isDragging = false;
             const diffX = currentX - startX;
-            const threshold = 50; // Mínimo movimiento para cambiar slide
+            const threshold = 50;
             
             if (Math.abs(diffX) > threshold) {
                 if (diffX > 0) {
-                    prevSlide(); // Deslizar hacia la derecha = slide anterior
+                    prevSlide();
                 } else {
-                    nextSlide(); // Deslizar hacia la izquierda = slide siguiente
+                    nextSlide();
                 }
             }
             
             resumeCarousel();
         }
 
+        // Navegación compatible con Android
         function navigateToSection(section) {
             const buttonText = {
                 'cuisine': 'Cuisine',
@@ -185,26 +186,85 @@
                 'togo': 'To Go Menu'
             };
             
-            // Si es Cuisine, redirigir directamente a la página
-            if (section === 'cuisine') {
-                window.location.href = 'Cuisine.html';
-                return;
-            }if (section === 'drinks') {
-                window.location.href = 'Drinks.html';
-                return;
-            }if (section === 'cocktails') {
-                window.location.href = 'Cocktails.html';
-                return;
-            }if (section === 'bakery') {
-                window.location.href = 'Bakery.html';
-                return;
-            }if (section === 'togo') {
-                window.location.href = 'ToGo.html';
+            // Detección del entorno
+            const isAndroidLocal = () => {
+                return (
+                    window.location.protocol === 'file:' || 
+                    navigator.userAgent.includes('Android') ||
+                    typeof Android !== 'undefined'
+                );
+            };
+            
+            // Función de navegación robusta
+            const navigateToPage = (pageName) => {
+                try {
+                    // Método 1: Interfaz Java de Android (si existe)
+                    if (typeof Android !== 'undefined' && Android.navigateToPage) {
+                        Android.navigateToPage(pageName);
+                        return true;
+                    }
+                    
+                    // Método 2: Navegación estándar web
+                    if (!isAndroidLocal()) {
+                        window.location.href = pageName;
+                        return true;
+                    }
+                    
+                    // Método 3: Navegación local Android
+                    const currentPath = window.location.pathname;
+                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+                    const newUrl = window.location.protocol + '//' + window.location.host + basePath + pageName;
+                    
+                    // Intento 1: location.href
+                    window.location.href = newUrl;
+                    
+                    // Intento 2: location.replace (fallback)
+                    setTimeout(() => {
+                        if (window.location.href === currentPath) {
+                            window.location.replace(newUrl);
+                        }
+                    }, 100);
+                    
+                    return true;
+                    
+                } catch (error) {
+                    console.error('Error navegando:', error);
+                    return false;
+                }
+            };
+            
+            // Mapeo de secciones a páginas
+            const pageMap = {
+                'cuisine': 'Cuisine.html',
+                'drinks': 'Drinks.html',
+                'cocktails': 'Cocktails.html',
+                'bakery': 'Bakery.html',
+                'togo': 'ToGo.html'
+            };
+            
+            // Intentar navegación
+            if (pageMap[section]) {
+                const success = navigateToPage(pageMap[section]);
+                
+                // Si la navegación falla o estamos en Android, mostrar notificación
+                if (!success || isAndroidLocal()) {
+                    showNavigationFeedback(buttonText[section], true);
+                }
                 return;
             }
             
-            // Para las otras secciones, mostrar notificación temporal
+            // Para secciones sin página (fallback)
+            showNavigationFeedback(buttonText[section], false);
+        }
+
+        // Función de feedback mejorada
+        function showNavigationFeedback(sectionName, isLoading = false) {
             const notification = document.createElement('div');
+            
+            const message = isLoading ? 
+                `Cargando ${sectionName}...` : 
+                `Abriendo ${sectionName}...`;
+            
             notification.style.cssText = `
                 position: fixed;
                 top: 50%;
@@ -219,17 +279,49 @@
                 z-index: 1000;
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
                 border: 2px solid rgba(255, 255, 255, 0.2);
+                min-width: 200px;
+                text-align: center;
             `;
-            notification.textContent = `Abriendo ${buttonText[section]}...`;
+            
+            notification.textContent = message;
             document.body.appendChild(notification);
 
+            // Remover notificación
             setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 1500);
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, isLoading ? 3000 : 1500);
         }
 
-        // Inicializar carrusel
+        // Función de inicialización para Android
+        function initializeAndroidNavigation() {
+            // Configurar interfaz para Android si es necesario
+            if (typeof Android !== 'undefined') {
+                console.log('Interfaz Android detectada');
+                
+                // Opcional: Notificar a Android que la página está lista
+                if (Android.onPageReady) {
+                    Android.onPageReady();
+                }
+            }
+            
+            // Detectar y manejar botón "atrás" de Android
+            if (window.history && history.pushState) {
+                window.addEventListener('popstate', function(event) {
+                    // Manejar navegación hacia atrás
+                    if (typeof Android !== 'undefined' && Android.onBackPressed) {
+                        Android.onBackPressed();
+                    }
+                });
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar navegación Android
+            initializeAndroidNavigation();
+            
             // Configurar el carrusel inmediatamente
             updateSlide();
             
