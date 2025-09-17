@@ -7,7 +7,6 @@
 body {
     font-family: Arial, sans-serif;
     min-height: 100vh;
-    /* CAMBIO IMPORTANTE: overflow auto en lugar de scroll */
     overflow: auto;
     overflow-x: hidden;
     background: 
@@ -225,12 +224,10 @@ body::after {
     width: 80%;
     max-width: 600px;
     margin: 0 auto;
-    padding: 150px 16px 0 16px;
+    padding: 150px 16px 20px 16px;
     position: relative;
     z-index: 10;
-    /* CAMBIO IMPORTANTE: min-height auto para adaptarse al contenido */
     min-height: auto;
-    padding-bottom: 20px;
 }
 
 /* CARRUSEL */
@@ -240,7 +237,6 @@ body::after {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 25px 35px rgba(0, 0, 0, 0.6);
-    /* AJUSTE: altura más flexible para imágenes rectangulares */
     height: 280px;
     border: 3px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(2px);
@@ -260,15 +256,13 @@ body::after {
     height: 100%;
     position: relative;
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    /* OPTIMIZACIÓN: contain para mostrar imagen completa */
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    /* Fondo oscuro para llenar espacios vacíos */
     background-color: #1a1a1a;
 }
 
-/* Slides con imágenes reales optimizadas */
+/* Slides con imágenes */
 .slide-1 {
     background-image: url('/restaurant_menu/assets/img/meat_slide.webp');
 }
@@ -289,7 +283,6 @@ body::after {
     background-image: url('/restaurant_menu/assets/img/meats_slide.webp');
 }
 
-/* Overlay suave para no opacar la comida */
 .carousel-overlay {
     position: absolute;
     inset: 0;
@@ -301,7 +294,6 @@ body::after {
     );
 }
 
-/* Título más compacto y legible */
 .carousel-title {
     position: absolute;
     bottom: 60px;
@@ -458,6 +450,7 @@ body::after {
     position: relative;
 }
 
+/* Gradientes de botones */
 .btn-cuisine {
     background: linear-gradient(135deg, #d97706 0%, #c2410c 70%, #92400e 100%);
 }
@@ -519,71 +512,12 @@ body::after {
     font-size: 13px;
     font-weight: bold;
     text-shadow: 1px 1px 0px #000;
-}deg, #28A745, #20C997);
-    color: white;
 }
 
-.btn-bakery {
-    background: linear-gradient(145deg, #4A90E2, #7B68EE);
-    color: white;
-}
-
-.btn-togo {
-    background: linear-gradient(145deg, #6F42C1, #8E44AD);
-    color: white;
-}
-
-.emoji {
-    font-size: 24px;
-}
-
-.button-medium .emoji {
-    font-size: 20px;
-}
-
-.text {
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-/* MEDIA QUERIES MEJORADAS para mejor control del scroll */
-@media (max-height: 700px) {
-    .container {
-        padding: 15px;
-        gap: 20px;
-    }
-    
-    .carousel {
-        height: 300px;
-    }
-    
-    .button-large {
-        width: 140px;
-        height: 100px;
-        font-size: 16px;
-    }
-    
-    .button-medium {
-        width: 100px;
-        height: 80px;
-        font-size: 12px;
-    }
-}
-
-@media (max-height: 600px) {
-    .carousel {
-        height: 250px;
-    }
-    
-    .container {
-        gap: 15px;
-    }
-}
-
-/* RESPONSIVE - Ajustes de carrusel para diferentes resoluciones */
+/* RESPONSIVE */
 @media (max-height: 800px) {
     .container {
-        padding: 120px 16px 0 16px;
+        padding: 120px 16px 20px 16px;
     }
     
     .carousel {
@@ -623,7 +557,7 @@ body::after {
 
 @media (max-height: 700px) {
     .container {
-        padding: 100px 16px 0 16px;
+        padding: 100px 16px 20px 16px;
     }
     
     .carousel {
@@ -648,7 +582,7 @@ body::after {
 
 @media (max-height: 600px) {
     .container {
-        padding: 80px 16px 0 16px;
+        padding: 80px 16px 20px 16px;
     }
     
     .carousel {
@@ -672,7 +606,6 @@ body::after {
     }
 }
 
-/* Para tablets en orientación landscape (horizontal) */
 @media (max-height: 500px) and (orientation: landscape) {
     .container {
         display: flex;
@@ -730,7 +663,7 @@ body::after {
 
     .container {
         max-width: 700px;
-        padding: 220px 20px 0 20px;
+        padding: 220px 20px 20px 20px;
     }
 
     .carousel {
@@ -762,7 +695,7 @@ body::after {
 
     .container {
         max-width: 800px;
-        padding: 240px 24px 0 24px;
+        padding: 240px 24px 20px 24px;
     }
     
     .carousel {
@@ -794,7 +727,7 @@ body::after {
 
     .container {
         max-width: 900px;
-        padding: 260px 28px 0 28px;
+        padding: 260px 28px 20px 28px;
     }
     
     .carousel {
@@ -827,7 +760,6 @@ body::after {
     }
 }
 
-/* Para pantallas muy pequeñas o tablets verticales pequeñas */
 @media (max-width: 480px) {
     .button-row-top, 
     .button-row-bottom {
@@ -845,7 +777,6 @@ body::after {
     }
 }
 
-/* Ajustes específicos para evitar scroll innecesario */
 @media (max-height: 480px) {
     .container {
         padding: 60px 16px 10px 16px;
