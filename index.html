@@ -51,28 +51,28 @@
 
         <div class="menu-buttons">
             <div class="button-row-top">
-                <button class="menu-button button-large btn-cuisine" onclick="navigateToSection('cuisine')">
+                <a href="Cuisine.html" class="menu-button button-large btn-cuisine" onclick="return handleNavigation(event, 'cuisine')">
                     <div class="emoji">🍽️</div>
                     <div class="text">Cuisine</div>
-                </button>
-                <button class="menu-button button-large btn-drinks" onclick="navigateToSection('drinks')">
+                </a>
+                <a href="Drinks.html" class="menu-button button-large btn-drinks" onclick="return handleNavigation(event, 'drinks')">
                     <div class="emoji">🍷</div>
                     <div class="text">Drinks</div>
-                </button>
+                </a>
             </div>
             <div class="button-row-bottom">
-                <button class="menu-button button-medium btn-cocktails" onclick="navigateToSection('cocktails')">
+                <a href="Cocktails.html" class="menu-button button-medium btn-cocktails" onclick="return handleNavigation(event, 'cocktails')">
                     <div class="emoji">🍸</div>
                     <div class="text">Cocktails</div>
-                </button>
-                <button class="menu-button button-medium btn-bakery" onclick="navigateToSection('bakery')">
+                </a>
+                <a href="Bakery.html" class="menu-button button-medium btn-bakery" onclick="return handleNavigation(event, 'bakery')">
                     <div class="emoji">🧁</div>
                     <div class="text">Bakery</div>
-                </button>
-                <button class="menu-button button-medium btn-togo" onclick="navigateToSection('togo')">
+                </a>
+                <a href="ToGo.html" class="menu-button button-medium btn-togo" onclick="return handleNavigation(event, 'togo')">
                     <div class="emoji">📦</div>
                     <div class="text">To Go Menu</div>
-                </button>
+                </a>
             </div>
         </div>
 
@@ -200,8 +200,8 @@
             resumeCarousel();
         }
 
-        // Navegación compatible con Android
-        function navigateToSection(section) {
+        // Manejo de navegación híbrida (enlaces + JavaScript)
+        function handleNavigation(event, section) {
             const buttonText = {
                 'cuisine': 'Cuisine',
                 'drinks': 'Drinks', 
@@ -209,85 +209,41 @@
                 'bakery': 'Bakery',
                 'togo': 'To Go Menu'
             };
-            
-            // Detección del entorno
-            const isAndroidLocal = () => {
-                return (
-                    window.location.protocol === 'file:' || 
-                    navigator.userAgent.includes('Android') ||
-                    typeof Android !== 'undefined'
-                );
-            };
-            
-            // Función de navegación robusta
-            const navigateToPage = (pageName) => {
-                try {
-                    // Método 1: Interfaz Java de Android (si existe)
-                    if (typeof Android !== 'undefined' && Android.navigateToPage) {
-                        Android.navigateToPage(pageName);
-                        return true;
-                    }
-                    
-                    // Método 2: Navegación estándar web
-                    if (!isAndroidLocal()) {
-                        window.location.href = pageName;
-                        return true;
-                    }
-                    
-                    // Método 3: Navegación local Android
-                    const currentPath = window.location.pathname;
-                    const basePath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-                    const newUrl = window.location.protocol + '//' + window.location.host + basePath + pageName;
-                    
-                    // Intento 1: location.href
-                    window.location.href = newUrl;
-                    
-                    // Intento 2: location.replace (fallback)
-                    setTimeout(() => {
-                        if (window.location.href === currentPath) {
-                            window.location.replace(newUrl);
-                        }
-                    }, 100);
-                    
-                    return true;
-                    
-                } catch (error) {
-                    console.error('Error navegando:', error);
-                    return false;
-                }
-            };
-            
-            // Mapeo de secciones a páginas
-            const pageMap = {
-                'cuisine': 'Cuisine.html',
-                'drinks': 'Drinks.html',
-                'cocktails': 'Cocktails.html',
-                'bakery': 'Bakery.html',
-                'togo': 'ToGo.html'
-            };
-            
-            // Intentar navegación
-            if (pageMap[section]) {
-                const success = navigateToPage(pageMap[section]);
+
+            // Si estamos en Android con interfaz nativa
+            if (typeof Android !== 'undefined') {
+                event.preventDefault(); // Cancelar navegación HTML
                 
-                // Si la navegación falla o estamos en Android, mostrar notificación
-                if (!success || isAndroidLocal()) {
-                    showNavigationFeedback(buttonText[section], true);
+                const link = event.target.closest('a');
+                const filename = link.href.split('/').pop();
+                
+                // Usar interfaz nativa de Android
+                if (Android.navigateToPage) {
+                    Android.navigateToPage(filename);
+                } else if (Android.fileExists && !Android.fileExists(filename)) {
+                    // Mostrar mensaje si el archivo no existe
+                    showNavigationFeedback(`${buttonText[section]} - Próximamente`, false);
+                } else {
+                    // Navegación manual con ruta completa
+                    const fullPath = window.location.href.replace(/[^/]*$/, filename);
+                    window.location.href = fullPath;
                 }
-                return;
+                return false; // Cancelar navegación HTML
             }
             
-            // Para secciones sin página (fallback)
-            showNavigationFeedback(buttonText[section], false);
+            // En web normal, permitir navegación HTML estándar
+            // Opcional: mostrar feedback
+            showNavigationFeedback(buttonText[section], true);
+            return true; // Permitir navegación HTML
         }
 
-        // Función de feedback mejorada
+        // Función simplificada de feedback
         function showNavigationFeedback(sectionName, isLoading = false) {
             const notification = document.createElement('div');
             
             const message = isLoading ? 
                 `Cargando ${sectionName}...` : 
-                `Abriendo ${sectionName}...`;
+                sectionName;
             
             notification.style.cssText = `
                 position: fixed;
@@ -296,14 +252,13 @@
                 transform: translate(-50%, -50%);
                 background: rgba(0, 0, 0, 0.9);
                 color: white;
-                padding: 16px 24px;
+                padding: 12px 20px;
                 border-radius: 12px;
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: bold;
                 z-index: 1000;
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
                 border: 2px solid rgba(255, 255, 255, 0.2);
-                min-width: 200px;
                 text-align: center;
             `;
             
@@ -315,7 +270,7 @@
                 if (document.body.contains(notification)) {
                     document.body.removeChild(notification);
                 }
-            }, isLoading ? 3000 : 1500);
+            }, isLoading ? 2000 : 1000);
         }
 
         // Funciones para manejar el banner
