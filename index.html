@@ -33,16 +33,18 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <div class="container">
-        <div class="carousel">
-            <div class="carousel-slide slide-1" id="slide">
-                <div class="carousel-overlay"></div>
-                <h2 class="carousel-title" id="slideTitle">Platos Gourmet</h2>
-                <div class="carousel-indicators">
-                    <div class="indicator active" onclick="goToSlide(0)"></div>
-                    <div class="indicator" onclick="goToSlide(1)"></div>
-                    <div class="indicator" onclick="goToSlide(2)"></div>
-                    <div class="indicator" onclick="goToSlide(3)"></div>
-                    <div class="indicator" onclick="goToSlide(4)"></div>
+        <div class="left-content">
+            <div class="carousel">
+                <div class="carousel-slide slide-1" id="slide">
+                    <div class="carousel-overlay"></div>
+                    <h2 class="carousel-title" id="slideTitle">Platos Gourmet</h2>
+                    <div class="carousel-indicators">
+                        <div class="indicator active" onclick="goToSlide(0)"></div>
+                        <div class="indicator" onclick="goToSlide(1)"></div>
+                        <div class="indicator" onclick="goToSlide(2)"></div>
+                        <div class="indicator" onclick="goToSlide(3)"></div>
+                        <div class="indicator" onclick="goToSlide(4)"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,6 +76,28 @@
             </div>
         </div>
 
+        <!-- Banner promocional -->
+        <div class="promotional-banner">
+            <img src="assets/img/banner_footer.webp" 
+                 alt="El Rey de la Salchipapa Miami - Banner Promocional" 
+                 class="banner-image"
+                 onload="hideBannerFallback()" 
+                 onerror="showBannerFallback()">
+            
+            <div class="banner-fallback" id="bannerFallback">
+                <div class="banner-graffiti">
+                    <div class="graffiti-crown">👑</div>
+                    <div class="graffiti-text">
+                        <span class="graffiti-el">El</span>
+                        <span class="graffiti-rey">Rey</span>
+                        <span class="graffiti-dela">de la</span>
+                        <span class="graffiti-salchi">Salchi</span><span class="graffiti-papa">papa</span>
+                        <span class="graffiti-miami">Miami</span>
+                    </div>
+                    <div class="graffiti-slogan">"La Original - Hay Inventores"</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -292,6 +316,26 @@
                     document.body.removeChild(notification);
                 }
             }, isLoading ? 3000 : 1500);
+        }
+
+        // Funciones para manejar el banner
+        function showBannerFallback() {
+            const bannerImage = document.querySelector('.banner-image');
+            const bannerFallback = document.getElementById('bannerFallback');
+            
+            if (bannerImage) {
+                bannerImage.style.display = 'none';
+            }
+            if (bannerFallback) {
+                bannerFallback.style.display = 'flex';
+            }
+        }
+
+        function hideBannerFallback() {
+            const bannerFallback = document.getElementById('bannerFallback');
+            if (bannerFallback) {
+                bannerFallback.style.display = 'none';
+            }
         }
 
         // Función de inicialización para Android
