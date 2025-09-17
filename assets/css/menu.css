@@ -1,6 +1,7 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
@@ -221,7 +222,7 @@ body::after {
 
 /* CONTAINER PRINCIPAL */
 .container {
-    width: 80%;
+    width: 89%;
     max-width: 600px;
     margin: 0 auto;
     padding: 150px 16px 0 16px;
@@ -269,24 +270,30 @@ body::after {
 
 /* Slides con imágenes */
 .slide-1 {
-    background-image: url('/restaurant_menu/assets/img/meat_slide.webp');
+    /* url('/restaurant_menu/assets/img/meat_slide.webp');*/ 
+     background-image: url('../img/meat_slide.webp');
 }
 
 .slide-2 {
-    background-image: url('/restaurant_menu/assets/img/lunch_slide.webp');
+    /*background-image: url('/restaurant_menu/assets/img/lunch_slide.webp');*/
+     background-image: url('../img/lunch_slide.webp');
 }
 
 .slide-3 {
-    background-image: url('/restaurant_menu/assets/img/meats_slide.webp');
+    /*background-image: url('/restaurant_menu/assets/img/meats_slide.webp');*/
+    background-image: url('../img/meats_slide.webp');
 }
 
 .slide-4 {
-    background-image: url('/restaurant_menu/assets/img/meat_rice_slide.webp');
+    /*background-image: url('/restaurant_menu/assets/img/meat_rice_slide.webp');*/
+    background-image: url('../img/meat_rice_slide.webp');
 }
 
 .slide-5 {
-    background-image: url('/restaurant_menu/assets/img/meats_slide.webp');
+    /*background-image: url('/restaurant_menu/assets/img/hamburguer_slide.webp');*/
+    background-image: url('../img/hamburguer_slide.webp');
 }
+
 
 /* Overlay suave para no opacar la comida */
 .carousel-overlay {
@@ -303,11 +310,11 @@ body::after {
 /* Título más compacto y legible */
 .carousel-title {
     position: absolute;
-    bottom: 60px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
     color: white;
-    font-size: 26px;
+    font-size: 22px;
     font-weight: 900;
     text-align: center;
     text-shadow: 
@@ -315,7 +322,7 @@ body::after {
         0 0 8px rgba(0, 0, 0, 0.9);
     letter-spacing: 0.5px;
     background: rgba(0, 0, 0, 0.6);
-    padding: 6px 14px;
+    padding: 4px 12px;
     border-radius: 8px;
     backdrop-filter: blur(6px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -323,11 +330,11 @@ body::after {
 
 .carousel-indicators {
     position: absolute;
-    bottom: 20px;
+    bottom: 15px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 16px;
+    gap: 12px;
 }
 
 .indicator {
@@ -350,7 +357,7 @@ body::after {
 .menu-buttons {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 18px;
     opacity: 0;
     transform: translateY(30px);
     animation: buttonsEnter 1s ease-out 1s forwards;
@@ -359,13 +366,13 @@ body::after {
 .button-row-top {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    gap: 15px;
 }
 
 .button-row-bottom {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 12px;
 }
 
 .menu-button {
@@ -384,6 +391,14 @@ body::after {
     justify-content: center;
     text-shadow: 2px 2px 0px #000, 1px 1px 0px #000;
     backdrop-filter: blur(4px);
+    /* Estilos para enlaces */
+    text-decoration: none;
+    outline: none;
+}
+
+.menu-button:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
 }
 
 .menu-button:hover {
@@ -417,40 +432,40 @@ body::after {
 }
 
 .button-large {
-    height: 90px;
+    height: 75px;
 }
 
 .button-large .emoji {
-    font-size: 28px;
-    margin-bottom: 8px;
+    font-size: 24px;
+    margin-bottom: 6px;
     filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
     z-index: 10;
     position: relative;
 }
 
 .button-large .text {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 900;
     z-index: 10;
     position: relative;
 }
 
 .button-medium {
-    height: 75px;
+    height: 65px;
 }
 
 .button-medium .emoji {
-    font-size: 20px;
-    margin-bottom: 6px;
+    font-size: 18px;
+    margin-bottom: 4px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
     z-index: 10;
     position: relative;
 }
 
 .button-medium .text {
-    font-size: 13px;
+    font-size: 12px;
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.2;
     font-weight: 800;
     padding: 0 4px;
     z-index: 10;
@@ -479,9 +494,9 @@ body::after {
 
 /* ESTADO VISUAL */
 .status-indicator {
-    margin-top: 24px;
+    margin-top: 15px;
     text-align: center;
-    padding-bottom: 12px;
+    padding-bottom: 8px;
     opacity: 0;
     transform: translateX(30px);
     animation: statusEnter 0.8s ease-out 1.5s forwards;
@@ -522,7 +537,7 @@ body::after {
 
 /* BANNER PROMOCIONAL */
 .promotional-banner {
-    margin-top: 30px;
+    margin-top: 15px;
     width: 100%;
     max-width: 100%;
     border-radius: 15px;
@@ -538,7 +553,7 @@ body::after {
 .banner-image {
     width: 100%;
     height: auto;
-    max-height: 150px;
+    max-height: 100px;
     object-fit: cover;
     display: block;
     filter: brightness(1.1) contrast(1.05);
@@ -554,10 +569,10 @@ body::after {
         #2d2d2d 75%,
         #1a1a1a 100%
     );
-    padding: 20px;
+    padding: 15px;
     text-align: center;
     position: relative;
-    min-height: 120px;
+    min-height: 80px;
     align-items: center;
     justify-content: center;
 }
@@ -574,8 +589,8 @@ body::after {
 }
 
 .graffiti-crown {
-    font-size: 32px;
-    margin-bottom: 8px;
+    font-size: 24px;
+    margin-bottom: 4px;
     filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
 }
 
@@ -584,13 +599,13 @@ body::after {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    margin-bottom: 8px;
+    gap: 4px;
+    margin-bottom: 4px;
 }
 
 .graffiti-el, .graffiti-dela {
     color: white;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
@@ -598,7 +613,7 @@ body::after {
 
 .graffiti-rey {
     color: #fbbf24;
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
@@ -606,7 +621,7 @@ body::after {
 
 .graffiti-salchi {
     color: #ef4444;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
@@ -614,7 +629,7 @@ body::after {
 
 .graffiti-papa {
     color: #fbbf24;
-    font-size: 28px;
+    font-size: 22px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
@@ -622,7 +637,7 @@ body::after {
 
 .graffiti-miami {
     color: #60a5fa;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold;
     font-style: italic;
     text-shadow: 2px 2px 0px #000, 1px 1px 0px #000;
@@ -630,13 +645,13 @@ body::after {
 
 .graffiti-slogan {
     color: #e5e7eb;
-    font-size: 14px;
+    font-size: 11px;
     font-weight: bold;
     font-style: italic;
     text-shadow: 2px 2px 0px #000;
     background: rgba(0, 0, 0, 0.6);
-    padding: 4px 12px;
-    border-radius: 8px;
+    padding: 2px 8px;
+    border-radius: 6px;
     display: inline-block;
 }deg, #28A745, #20C997);
     color: white;
@@ -894,7 +909,7 @@ body::after {
 
     .carousel {
         height: 380px;
-        margin-bottom: 26px;
+        margin-bottom: 20px;
     }
 
     .button-large {
@@ -908,8 +923,6 @@ body::after {
 
 @media (min-width: 768px) {
     .logo-absolute {
-        top: 30px;
-        left: 10px;
         width: 430px;
         height: 180px;
     }
@@ -921,12 +934,12 @@ body::after {
 
     .container {
         max-width: 800px;
-        padding: 240px 24px 0 24px;
+        padding: 210px 24px 0 24px;
     }
     
     .carousel {
         height: 420px;
-        margin-bottom: 60px;
+        margin-bottom: 20px;
     }
     
     .button-large {
