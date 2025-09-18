@@ -15,6 +15,7 @@ class MenuEngine {
         
         this.currentCategory = this.config.allCategoryKey;
         this.init();
+        this.scrollPosition = 0; // Agregar esta línea
     }
 
     init() {
@@ -130,6 +131,8 @@ class MenuEngine {
         const menuList = document.querySelector('.menu-list');
         if (!menuList) return;
 
+        // Remover clase de animación anterior si existe
+        menuList.classList.remove('fade-in-sequence');
         menuList.style.animation = 'none';
         menuList.innerHTML = '';
 
@@ -139,11 +142,12 @@ class MenuEngine {
             this.renderSingleCategory(menuList, category);
         }
 
+        // Aplicar animación escalonada después de renderizar
         setTimeout(() => {
-            menuList.style.animation = 'fadeInUp 0.6s ease-out forwards';
-        }, 10);
+            menuList.classList.add('fade-in-sequence');
+        }, 100);
 
-        setTimeout(() => this.adjustContainerHeight(), 100);
+        setTimeout(() => this.adjustContainerHeight(), 800); // Aumenté el timeout para dar tiempo a las animaciones
     }
 
     renderAllCategories(container) {
@@ -343,6 +347,7 @@ class MenuEngine {
 
         const decodedTitle = this.unescapeHtml(title);
         const decodedDescription = this.unescapeHtml(description);
+        this.scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
         
         let tags = [];
         try {
@@ -416,7 +421,9 @@ class MenuEngine {
         }
 
         // Mostrar modal
-        if (modal) {
+         if (modal) {
+            // Aplicar la posición fija con la posición actual
+            document.body.style.top = `-${this.scrollPosition}px`;
             document.body.classList.add('modal-open');
             modal.classList.add('active');
         }
@@ -424,10 +431,16 @@ class MenuEngine {
 
     closeModal() {
         const modal = document.getElementById(this.config.modalId);
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.classList.remove('modal-open');
-        }
+    if (modal) {
+        modal.classList.remove('active');
+        
+        // Restaurar el scroll ANTES de remover modal-open
+        document.body.classList.remove('modal-open');
+        document.body.style.top = '';
+        
+        // Restaurar posición del scroll
+        window.scrollTo(0, this.scrollPosition);
+    }
     }
 
     adjustContainerHeight() {
