@@ -36,8 +36,7 @@
         <div class="left-content">
             <div class="carousel">
                 <div class="carousel-slide slide-1" id="slide">
-                    <div class="carousel-overlay"></div>
-                    <h2 class="carousel-title" id="slideTitle">Platos Gourmet</h2>
+                    <!-- Removido: carousel-overlay y carousel-title -->
                     <div class="carousel-indicators">
                         <div class="indicator active" onclick="goToSlide(0)"></div>
                         <div class="indicator" onclick="goToSlide(1)"></div>
@@ -75,7 +74,7 @@
                 </a>
             </div>
         </div>
-
+        
         <!-- Banner promocional -->
         <div class="promotional-banner">
             <img src="assets/img/banner_footer.webp" 
@@ -98,6 +97,21 @@
                 </div>
             </div>
         </div>
+
+        <!-- Información de dirección -->
+        <div class="restaurant-info">
+            <div class="address-container">
+                <div class="address-icon">📍</div>
+                <div class="address-details">
+                    <div class="address-line">11635 Red Rd</div>
+                    <div class="address-line">Miramar, FL 33025</div>
+                    <div class="address-line phone-line">
+                        <span class="phone-icon">📞</span>
+                        <span class="phone-number">754-254-1977</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -109,20 +123,18 @@
         let isDragging = false;
         
         const slides = [
-            { title: '', class: 'slide-1' },
-            { title: '', class: 'slide-2' },
-            { title: '', class: 'slide-3' },
-            { title: '', class: 'slide-4' },
-            { title: '', class: 'slide-5' }
+            { class: 'slide-1' },
+            { class: 'slide-2' },
+            { class: 'slide-3' },
+            { class: 'slide-4' },
+            { class: 'slide-5' }
         ];
 
         function updateSlide() {
             const slideElement = document.getElementById('slide');
-            const titleElement = document.getElementById('slideTitle');
             const indicators = document.querySelectorAll('.indicator');
 
             slideElement.className = `carousel-slide ${slides[currentSlide].class}`;
-            titleElement.textContent = slides[currentSlide].title;
 
             indicators.forEach((indicator, index) => {
                 indicator.classList.toggle('active', index === currentSlide);
