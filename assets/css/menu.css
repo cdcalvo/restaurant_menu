@@ -987,9 +987,14 @@ body::after {
         top: 10px;
     }
 
+    .mi-logo {
+        width: 300px;
+        max-height: 130px;
+    }
+
     .container {
         max-width: 700px;
-        padding: 160px 20px 0 20px;
+        padding: 140px 20px 0 20px;
     }
 
     .carousel {
