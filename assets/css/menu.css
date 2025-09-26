@@ -297,28 +297,28 @@ body::after {
 
 /* Slides con imágenes */
 .slide-1 {
-    /* url('/restaurant_menu/assets/img/meat_slide.webp');*/ 
-     background-image: url('../img/meat_slide.webp');
+    /* background-image: url('../img/meat_slide.webp');*/ 
+     background-image: url('/restaurant_menu/assets/img/meat_slide.webp');
 }
 
 .slide-2 {
-    /*background-image: url('/restaurant_menu/assets/img/lunch_slide.webp');*/
-     background-image: url('../img/lunch_slide.webp');
+    background-image: url('/restaurant_menu/assets/img/lunch_slide.webp');
+     /*background-image: url('../img/lunch_slide.webp');*/
 }
 
 .slide-3 {
-    /*background-image: url('/restaurant_menu/assets/img/meats_slide.webp');*/
-    background-image: url('../img/meats_slide.webp');
+    background-image: url('/restaurant_menu/assets/img/meats_slide.webp');
+    /*background-image: url('../img/meats_slide.webp');*/
 }
 
 .slide-4 {
-    /*background-image: url('/restaurant_menu/assets/img/meat_rice_slide.webp');*/
-    background-image: url('../img/meat_rice_slide.webp');
+    background-image: url('/restaurant_menu/assets/img/meat_rice_slide.webp');
+    /*background-image: url('../img/meat_rice_slide.webp');*/
 }
 
 .slide-5 {
-    /*background-image: url('/restaurant_menu/assets/img/hamburguer_slide.webp');*/
-    background-image: url('../img/hamburguer_slide.webp');
+    background-image: url('/restaurant_menu/assets/img/hamburguer_slide.webp');
+    /*background-image: url('../img/hamburguer_slide.webp');*/
 }
 
 .carousel-overlay {
