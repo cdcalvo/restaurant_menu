@@ -6,10 +6,8 @@
 
 body {
     font-family: Arial, sans-serif;
-    min-height: 100vh;
-    /* CAMBIO IMPORTANTE: overflow auto en lugar de scroll */
-    overflow: auto;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
     background: 
         linear-gradient(90deg, 
             rgba(0,0,0,0.1) 0%, 
@@ -19,6 +17,38 @@ body {
         linear-gradient(180deg, #1a1a1a 0%, #2a2a2a 50%, #1a1a1a 100%);
     background-size: 40px 100%, 100% 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* FILA 1: LOGO - Altura fija */
+.logo-row {
+    flex: 0 0 clamp(60px, 12vh, 120px);
+    display: flex;
+    align-items: flex-start;
+    padding: clamp(8px, 2vh, 16px) clamp(16px, 4vw, 32px);
+    position: relative;
+    z-index: 50;
+}
+
+/* FILA 2: CARRUSEL - Altura flexible */
+.carousel-row {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 clamp(16px, 4vw, 32px);
+    min-height: 0;
+}
+
+/* FILA 3: MENÚ - Altura flexible pero mayor */
+.menu-row {
+    flex: 1.3;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(16px, 3vh, 24px) clamp(16px, 4vw, 32px) clamp(12px, 2vh, 20px);
+    min-height: 0;
 }
 
 body::before {
@@ -89,23 +119,20 @@ body::after {
     }
 }
 
-/* LOGO */
-.logo-absolute {
-    position: absolute;
-    top: 20px;
-    left: 0;
-    z-index: 50;
-    width: 350px;
-    height: 140px;
+/* LOGO - Ahora dentro de logo-row */
+.logo-container {
+    position: relative;
+    width: clamp(200px, 35vw, 480px);
+    height: auto;
     opacity: 0;
     transform: translateX(-50px);
     animation: logoEnter 1s ease-out 0.2s forwards;
 }
 
 .mi-logo {
-    width: 320px;
+    width: 100%;
     height: auto;
-    max-height: 140px;
+    max-height: clamp(80px, 15vh, 200px);
     object-fit: contain;
     filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.5));
     mix-blend-mode: multiply;
@@ -121,16 +148,18 @@ body::after {
 .logo-texto-respaldo {
     display: none;
     position: relative;
-    width: 140px;
-    height: 85px;
+    width: 100%;
+    max-width: 140px;
+    height: auto;
 }
 
 .crown {
     position: absolute;
     top: -8px;
-    left: 24px;
-    width: 48px;
-    height: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: clamp(32px, 8vw, 48px);
+    height: clamp(20px, 6vw, 32px);
     background: linear-gradient(to bottom, #fbbf24, #d97706);
     border-radius: 8px 8px 0 0;
     border: 2px solid #92400e;
@@ -161,7 +190,7 @@ body::after {
 }
 
 .logo-text {
-    text-align: left;
+    text-align: center;
     padding-top: 16px;
 }
 
@@ -169,7 +198,8 @@ body::after {
 .logo-line2 {
     display: flex;
     align-items: center;
-    gap: 4px;
+    justify-content: center;
+    gap: clamp(2px, 1vw, 4px);
 }
 
 .logo-line2 {
@@ -181,67 +211,66 @@ body::after {
     font-weight: bold;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
-}
-
-.logo-el {
-    font-size: 18px;
-}
-
-.logo-dela {
-    font-size: 14px;
+    font-size: clamp(14px, 3.5vw, 18px);
 }
 
 .logo-rey, .logo-papa {
     color: #fbbf24;
-    font-size: 24px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
-}
-
-.logo-papa {
-    font-size: 20px;
+    font-size: clamp(18px, 4.5vw, 24px);
 }
 
 .logo-salchi {
     color: #ef4444;
-    font-size: 20px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
+    font-size: clamp(16px, 4vw, 20px);
 }
 
 .logo-miami {
     color: #60a5fa;
-    font-size: 14px;
     font-weight: bold;
     font-style: italic;
     margin-top: -4px;
     text-shadow: 2px 2px 0px #000, 1px 1px 0px #000;
+    font-size: clamp(12px, 3vw, 14px);
 }
 
-/* CONTAINER PRINCIPAL */
-.container {
-    width: 89%;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 150px 16px 0 16px;
+/* CONTAINER PRINCIPAL - Flexbox adaptativo */
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: clamp(60px, 12vh, 100px) clamp(16px, 4vw, 32px) clamp(16px, 3vh, 24px);
     position: relative;
     z-index: 10;
-    /* CAMBIO IMPORTANTE: min-height auto para adaptarse al contenido */
-    min-height: auto;
-    padding-bottom: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    height: calc(100vh - clamp(60px, 12vh, 100px));
 }
 
-/* CARRUSEL */
+/* CARRUSEL - Simplificado para carousel-row */
+.carousel-container {
+    width: 100%;
+    max-width: clamp(300px, 90vw, 800px);
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 .carousel {
     position: relative;
-    margin-bottom: 50px;
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 25px 35px rgba(0, 0, 0, 0.6);
-    /* AJUSTE: altura más flexible para imágenes rectangulares */
-    height: 280px;
+    height: clamp(100%, 100%, 100%);
+    width: 100%;
     border: 3px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(2px);
     opacity: 0;
@@ -260,11 +289,9 @@ body::after {
     height: 100%;
     position: relative;
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    /* OPTIMIZACIÓN: contain para mostrar imagen completa */
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
-    /* Fondo oscuro para llenar espacios vacíos */
     background-color: #1a1a1a;
 }
 
@@ -294,8 +321,6 @@ body::after {
     background-image: url('../img/hamburguer_slide.webp');
 }
 
-
-/* Overlay suave para no opacar la comida */
 .carousel-overlay {
     position: absolute;
     inset: 0;
@@ -305,27 +330,6 @@ body::after {
         rgba(0, 0, 0, 0.05) 50%, 
         rgba(0, 0, 0, 0.7) 100%
     );
-}
-
-/* Título más compacto y legible */
-.carousel-title {
-    position: absolute;
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    color: white;
-    font-size: 22px;
-    font-weight: 900;
-    text-align: center;
-    text-shadow: 
-        2px 2px 0px #000, 
-        0 0 8px rgba(0, 0, 0, 0.9);
-    letter-spacing: 0.5px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 4px 12px;
-    border-radius: 8px;
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .carousel-indicators {
@@ -338,8 +342,8 @@ body::after {
 }
 
 .indicator {
-    width: 12px;
-    height: 12px;
+    width: clamp(8px, 2.5vw, 12px);
+    height: clamp(8px, 2.5vw, 12px);
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.6);
     border: 2px solid rgba(0, 0, 0, 0.8);
@@ -353,26 +357,47 @@ body::after {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
 }
 
-/* BOTONES DEL MENÚ */
+/* MENÚ - Ahora dentro de menu-row */
 .menu-buttons {
+    width: 100%;
+    max-width: clamp(300px, 90vw, 700px);
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: clamp(15px, 3.5vh, 25px);
     opacity: 0;
     transform: translateY(30px);
     animation: buttonsEnter 1s ease-out 1s forwards;
+    flex: 1;
+    justify-content: center;
 }
 
-.button-row-top {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+.button-row {
+    display: flex;
+    gap: clamp(12px, 3vw, 20px);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.button-row-top .menu-button {
+    flex: 1;
+    min-width: clamp(150px, 42vw, 250px);
+    height: clamp(75px, 14vh, 110px);
 }
 
 .button-row-bottom {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+    display: flex;
+    gap: clamp(6px, 1.8vw, 12px);
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.button-row-bottom .menu-button {
+    flex: 1;
+    min-width: clamp(80px, 26vw, 140px);
+    height: clamp(70px, 13vh, 95px);
+    max-width: none;
 }
 
 .menu-button {
@@ -391,7 +416,6 @@ body::after {
     justify-content: center;
     text-shadow: 2px 2px 0px #000, 1px 1px 0px #000;
     backdrop-filter: blur(4px);
-    /* Estilos para enlaces */
     text-decoration: none;
     outline: none;
 }
@@ -431,45 +455,22 @@ body::after {
     pointer-events: none;
 }
 
-.button-large {
-    height: 75px;
-}
-
-.button-large .emoji {
-    font-size: 24px;
-    margin-bottom: 6px;
+.emoji {
+    font-size: clamp(20px, 5.5vw, 36px);
+    margin-bottom: clamp(5px, 1.2vh, 10px);
     filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
     z-index: 10;
     position: relative;
 }
 
-.button-large .text {
-    font-size: 16px;
+.text {
+    font-size: clamp(10px, 2.8vw, 20px);
     font-weight: 900;
     z-index: 10;
     position: relative;
-}
-
-.button-medium {
-    height: 65px;
-}
-
-.button-medium .emoji {
-    font-size: 18px;
-    margin-bottom: 4px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
-    z-index: 10;
-    position: relative;
-}
-
-.button-medium .text {
-    font-size: 12px;
     text-align: center;
-    line-height: 1.2;
-    font-weight: 800;
-    padding: 0 4px;
-    z-index: 10;
-    position: relative;
+    line-height: 1.1;
+    padding: 0 2px;
 }
 
 .btn-cuisine {
@@ -485,61 +486,28 @@ body::after {
 }
 
 .btn-bakery {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 70%, #1e40af 100%);
+    background: linear-gradient(145deg, #4A90E2, #7B68EE);
 }
 
 .btn-togo {
-    background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 70%, #4c1d95 100%);
+    background: linear-gradient(145deg, #6F42C1, #8E44AD);
 }
 
-/* ESTADO VISUAL */
-.status-indicator {
-    margin-top: 15px;
-    text-align: center;
-    padding-bottom: 8px;
-    opacity: 0;
-    transform: translateX(30px);
-    animation: statusEnter 0.8s ease-out 1.5s forwards;
-}
-
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.7);
-    color: #e5e7eb;
-    padding: 10px 18px;
-    border-radius: 12px;
-    border: 2px solid rgba(75, 85, 99, 0.4);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
-}
-
-.status-badge:hover {
-    transform: translateY(-2px);
-}
-
-.status-dot {
-    width: 10px;
-    height: 10px;
-    background: #10b981;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
-}
-
-.status-text {
-    font-size: 13px;
-    font-weight: bold;
-    text-shadow: 1px 1px 0px #000;
-}
-
-/* BANNER PROMOCIONAL */
-.promotional-banner {
-    margin-top: 15px;
+/* CONTENIDO INFERIOR - Para menu-row */
+.bottom-content {
     width: 100%;
-    max-width: 100%;
+    max-width: clamp(300px, 90vw, 700px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(8px, 1.5vh, 12px);
+    flex-shrink: 0;
+}
+
+/* BANNER PROMOCIONAL - Flex responsivo */
+.promotional-banner {
+    width: 100%;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
@@ -548,7 +516,6 @@ body::after {
     opacity: 0;
     transform: translateY(20px);
     animation: statusEnter 1s ease-out 2s forwards;
-    /* Contenedor flexible para imagen 900x150 */
     display: flex;
     align-items: center;
 }
@@ -556,7 +523,8 @@ body::after {
 .banner-image {
     width: 100%;
     height: auto;
-    object-fit: contain;
+    max-height: clamp(40px, 8vh, 100px);
+    object-fit: cover;
     display: block;
     filter: brightness(1.1) contrast(1.05);
     background-color: #1a1a1a;
@@ -572,16 +540,14 @@ body::after {
         #2d2d2d 75%,
         #1a1a1a 100%
     );
-    padding: 15px;
+    padding: clamp(6px, 1.5vh, 12px);
     text-align: center;
     position: relative;
-    min-height: 80px;
+    min-height: clamp(40px, 8vh, 60px);
     align-items: center;
     justify-content: center;
 }
 
-/* Cuando la imagen falla, mostrar fallback */
-.banner-image[style*="display: none"] + .banner-fallback,
 .banner-fallback.show {
     display: flex;
 }
@@ -592,7 +558,7 @@ body::after {
 }
 
 .graffiti-crown {
-    font-size: 24px;
+    font-size: clamp(18px, 4.5vw, 24px);
     margin-bottom: 4px;
     filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.7));
 }
@@ -602,53 +568,52 @@ body::after {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: clamp(2px, 1vw, 4px);
     margin-bottom: 4px;
 }
 
 .graffiti-el, .graffiti-dela {
     color: white;
-    font-size: 18px;
     font-weight: bold;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
+    font-size: clamp(14px, 3.5vw, 18px);
 }
 
 .graffiti-rey {
     color: #fbbf24;
-    font-size: 24px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
+    font-size: clamp(18px, 4.5vw, 24px);
 }
 
 .graffiti-salchi {
     color: #ef4444;
-    font-size: 22px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
+    font-size: clamp(16px, 4vw, 22px);
 }
 
 .graffiti-papa {
     color: #fbbf24;
-    font-size: 22px;
     font-weight: 900;
     font-style: italic;
     text-shadow: 3px 3px 0px #000, 1px 1px 0px #000;
+    font-size: clamp(16px, 4vw, 22px);
 }
 
 .graffiti-miami {
     color: #60a5fa;
-    font-size: 16px;
     font-weight: bold;
     font-style: italic;
     text-shadow: 2px 2px 0px #000, 1px 1px 0px #000;
+    font-size: clamp(12px, 3vw, 16px);
 }
 
 .graffiti-slogan {
     color: #e5e7eb;
-    font-size: 11px;
     font-weight: bold;
     font-style: italic;
     text-shadow: 2px 2px 0px #000;
@@ -656,11 +621,11 @@ body::after {
     padding: 2px 8px;
     border-radius: 6px;
     display: inline-block;
+    font-size: clamp(9px, 2.2vw, 11px);
 }
 
 /* INFORMACIÓN DEL RESTAURANTE */
 .restaurant-info {
-    margin-top: 20px;
     text-align: center;
     opacity: 0;
     transform: translateY(15px);
@@ -670,10 +635,10 @@ body::after {
 .address-container {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: clamp(4px, 1.5vw, 8px);
     background: rgba(0, 0, 0, 0.7);
     color: #e5e7eb;
-    padding: 16px 20px;
+    padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 16px);
     border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(8px);
@@ -687,7 +652,7 @@ body::after {
 }
 
 .address-icon {
-    font-size: 22px;
+    font-size: clamp(14px, 3.5vw, 18px);
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
@@ -696,458 +661,64 @@ body::after {
 }
 
 .address-line {
-    font-size: 15px !important;
-    font-weight: bold !important;
+    font-size: clamp(10px, 2.5vw, 13px);
+    font-weight: bold;
     color: white;
     text-shadow: 1px 1px 0px #000;
     line-height: 1.4;
 }
 
 .address-line:first-child {
-    color: #fbbf24 !important;
+    color: #fbbf24;
 }
 
 .phone-line {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 6px;
+    gap: clamp(3px, 1vw, 6px);
+    margin-top: 4px;
 }
 
 .phone-icon {
-    font-size: 14px;
+    font-size: clamp(10px, 2vw, 12px);
     filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
 
 .phone-number {
     color: #60a5fa;
     font-weight: bold;
-    font-size: 15px !important;
+    font-size: clamp(10px, 2.5vw, 13px);
     text-shadow: 1px 1px 0px #000;
     line-height: 1.4;
 }
 
-.btn-bakery {
-    background: linear-gradient(145deg, #4A90E2, #7B68EE);
-    color: white;
-}
-
-.btn-togo {
-    background: linear-gradient(145deg, #6F42C1, #8E44AD);
-    color: white;
-}
-
-.emoji {
-    font-size: 24px;
-}
-
-.button-medium .emoji {
-    font-size: 20px;
-}
-
-.text {
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
-
-/* MEDIA QUERIES MEJORADAS para mejor control del scroll */
-@media (max-height: 700px) {
-    .container {
-        padding: 15px;
-        gap: 20px;
-    }
-    
-    .carousel {
-        height: 300px;
-    }
-    
-    .button-large {
-        width: 140px;
-        height: 100px;
-        font-size: 16px;
-    }
-    
-    .button-medium {
-        width: 100px;
-        height: 80px;
-        font-size: 12px;
-    }
-}
-
-@media (max-height: 600px) {
-    .carousel {
-        height: 250px;
-    }
-    
-    .container {
-        gap: 15px;
-    }
-}
-
-/* RESPONSIVE - Ajustes de carrusel para diferentes resoluciones */
-@media (max-height: 800px) {
-    .container {
-        padding: 120px 16px 0 16px;
-    }
-    
-    .carousel {
-        height: 240px;
-        margin-bottom: 40px;
-    }
-    
-    .carousel-title {
-        font-size: 22px;
-        bottom: 50px;
-    }
-    
-    .button-large {
-        height: 80px;
-    }
-    
-    .button-medium {
-        height: 65px;
-    }
-    
-    .button-large .emoji {
-        font-size: 24px;
-    }
-    
-    .button-large .text {
-        font-size: 16px;
-    }
-    
-    .button-medium .emoji {
-        font-size: 18px;
-    }
-    
-    .button-medium .text {
-        font-size: 12px;
-    }
-}
-
-@media (max-height: 700px) {
-    .container {
-        padding: 100px 16px 0 16px;
-    }
-    
-    .carousel {
-        height: 220px;
-        margin-bottom: 35px;
-    }
-    
-    .carousel-title {
-        font-size: 20px;
-        bottom: 45px;
-    }
-    
-    .menu-buttons {
-        gap: 20px;
-    }
-    
+/* Ajuste para pantallas muy pequeñas - layout vertical */
+@media (max-width: 400px) {
     .button-row-top,
     .button-row-bottom {
-        gap: 15px;
-    }
-}
-
-@media (max-height: 600px) {
-    .container {
-        padding: 80px 16px 0 16px;
-    }
-    
-    .carousel {
-        height: 200px;
-        margin-bottom: 30px;
-    }
-    
-    .carousel-title {
-        font-size: 18px;
-        bottom: 40px;
-    }
-    
-    .logo-absolute {
-        width: 280px;
-        height: 110px;
-    }
-    
-    .mi-logo {
-        width: 260px;
-        max-height: 110px;
-    }
-}
-
-/* Para tablets en orientación landscape (horizontal) */
-@media (max-height: 500px) and (orientation: landscape) {
-    .container {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 20px;
-        padding: 20px;
-        max-width: none;
-        width: 95%;
-    }
-    
-    .left-content {
-        flex: 1;
-        max-width: 450px;
-    }
-    
-    .carousel {
-        height: 250px;
-        margin-bottom: 20px;
-    }
-    
-    .carousel-title {
-        font-size: 20px;
-        bottom: 40px;
-    }
-    
-    .menu-buttons {
-        flex: 1;
-        max-width: 350px;
-        gap: 15px;
+        flex-direction: column;
+        align-items: center;
     }
 
-    .promotional-banner {
-        margin-top: 15px;
-        grid-column: 1 / -1;
-    }
-
-    .banner-image {
-        max-height: 80px;
-    }
-
-    .banner-fallback {
-        min-height: 60px;
-        padding: 8px;
-    }
-
-    .graffiti-text {
-        gap: 4px;
-    }
-
-    .graffiti-crown {
-        font-size: 20px;
-    }
-
-    .graffiti-rey {
-        font-size: 20px;
-    }
-
-    .graffiti-salchi, .graffiti-papa {
-        font-size: 18px;
-    }
-
-    .graffiti-el, .graffiti-dela, .graffiti-miami {
-        font-size: 14px;
-    }
-
-    .graffiti-slogan {
-        font-size: 10px;
-        padding: 2px 8px;
-    }
-
-    .restaurant-info {
-        margin-top: 10px;
-        grid-column: 1 / -1;
-    }
-
-    .address-container {
-        padding: 6px 10px;
-        gap: 4px;
-    }
-
-    .address-icon {
-        font-size: 12px;
-    }
-
-    .address-line {
-        font-size: 10px;
-        line-height: 1.2;
-    }
-    
-    .logo-absolute {
-        top: 10px;
-        left: 10px;
-        width: 200px;
-        height: 80px;
-    }
-    
-    .mi-logo {
-        width: 180px;
-        max-height: 80px;
-    }
-}
-
-@media (min-width: 480px) {
-    .logo-absolute {
-        width: 380px;
-        height: 160px;
-        top: 10px;
-    }
-
-    .mi-logo {
-        width: 300px;
-        max-height: 130px;
-    }
-
-    .container {
-        max-width: 700px;
-        padding: 140px 20px 0 20px;
-    }
-
-    .carousel {
-        height: 330px;
-        margin-bottom: 20px;
-    }
-
-    .button-large {
-        height: 95px;
-    }
-
-    .button-medium {
-        height: 80px;
-    }
-
-    .restaurant-info {
-        margin-top: 10px;
-    }
-
-}
-
-@media (min-width: 768px) {
-    .logo-absolute {
-        top: 10px;
-        width: 430px;
-        height: 180px;
-    }
-
-    .mi-logo {
-        width: 350px;
-        max-height: 150px;
-    }
-
-    .menu-buttons{
-        margin-bottom: 25px;
-    }
-
-    .container {
-        max-width: 800px;
-        padding: 170px 24px 0 24px;
-    }
-    
-    .carousel {
-        height: 420px;
-        margin-bottom: 25px;
-    }
-    
-    .button-large {
-        height: 100px;
-    }
-    
-    .button-medium {
-        height: 85px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .logo-absolute {
-        top: 35px;
-        left: 15px;
-        width: 480px;
-        height: 200px;
-    }
-
-    .mi-logo {
-        width: 460px;
-        max-height: 200px;
-    }
-
-    .menu-buttons{
-        margin-bottom: 40px;
-    }
-
-    .container {
-        max-width: 900px;
-        padding: 260px 28px 0 28px;
-    }
-    
-    .carousel {
-        height: 450px;
-        margin-bottom: 40px;
-    }
-    
-    .button-large {
-        height: 110px;
-    }
-    
-    .button-medium {
-        height: 90px;
-    }
-
-    .button-large .emoji {
-        font-size: 32px;
-    }
-
-    .button-large .text {
-        font-size: 20px;
-    }
-
-    .button-medium .emoji {
-        font-size: 24px;
-    }
-
-    .button-medium .text {
-        font-size: 15px;
-    }
-}
-
-/* Para pantallas muy pequeñas o tablets verticales pequeñas */
-@media (max-width: 480px) {
-    .button-row-top, 
-    .button-row-bottom {
-        grid-template-columns: 1fr;
-        justify-items: center;
-    }
-    
-    .button-row-bottom {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .menu-button {
+    .button-row-top .menu-button,
+    .button-row-bottom .menu-button {
         width: 100%;
-        max-width: 200px;
+        max-width: 280px;
     }
 }
 
-/* Ajustes específicos para evitar scroll innecesario */
-@media (max-height: 480px) {
-    .container {
-        padding: 60px 16px 10px 16px;
+/* Ajuste para pantallas muy anchas - layout horizontal */
+@media (min-width: 1200px) and (min-height: 600px) {
+    .carousel-row {
+        padding: 0 clamp(32px, 8vw, 80px);
     }
     
-    .carousel {
-        height: 200px;
-        margin-bottom: 20px;
+    .menu-row {
+        padding: clamp(20px, 4vh, 32px) clamp(32px, 8vw, 80px) clamp(16px, 3vh, 24px);
     }
-    
-    .menu-buttons {
-        gap: 15px;
-    }
-    
-    .button-large,
-    .button-medium {
-        height: 60px;
-    }
-    
-    .logo-absolute {
-        width: 220px;
-        height: 90px;
-    }
-    
-    .mi-logo {
-        width: 200px;
-        max-height: 90px;
+
+    .menu-buttons,
+    .bottom-content {
+        max-width: 800px;
     }
 }
