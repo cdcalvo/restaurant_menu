@@ -239,6 +239,7 @@
 
         /* IMAGEN PROMOCIONAL ÚNICA - CORREGIDA */
         .promo-image-container {
+            width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
@@ -290,6 +291,11 @@
             width: 100%;
             max-width: clamp(280px, 70vw, 400px);
             animation: fadeInUp 1s ease-out 1.2s both;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .cta-button:hover {
@@ -374,9 +380,9 @@
 
     <!-- FILA 3: BOTÓN DE ACCIÓN -->
     <div class="action-row">
-        <button class="cta-button" onclick="window.location.href='menu.html'">
+        <a href="Menu.html" class="cta-button">
             Go To Menu
-        </button>
+        </a>
     </div>
 
     <script>
