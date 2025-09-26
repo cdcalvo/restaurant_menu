@@ -48,13 +48,26 @@ class MenuEngine {
     }
 
     setupScrollHandling() {
-        // Event listeners para el scroll
-        window.addEventListener('scroll', () => this.toggleScrollButton());
-        window.addEventListener('load', () => this.toggleScrollButton());
+        const toggleButton = () => this.toggleScrollButton();
+        const container = document.querySelector(this.config.containerSelector);
+        
+        // Si el contenedor tiene overflow-y: auto, escuchar su scroll
+        if (container) {
+            container.addEventListener('scroll', toggleButton, { passive: true });
+        }
+        
+        // También escuchar window scroll como fallback
+        window.addEventListener('scroll', toggleButton, { passive: true });
+        window.addEventListener('load', toggleButton);
+        document.addEventListener('DOMContentLoaded', toggleButton);
+        
+        // Verificar cada 3 segundos como fallback
+        setInterval(toggleButton, 3000);
         
         // Event listener para redimensionar ventana
         window.addEventListener('resize', () => {
             setTimeout(() => this.adjustContainerHeight(), 100);
+            setTimeout(toggleButton, 200);
         });
     }
 
@@ -142,12 +155,17 @@ class MenuEngine {
             this.renderSingleCategory(menuList, category);
         }
 
-        // Aplicar animación escalonada después de renderizar
+        // Aplicar animación escalonada después de renderizar - UNA SOLA VEZ
         setTimeout(() => {
             menuList.classList.add('fade-in-sequence');
+            this.toggleScrollButton();
         }, 100);
 
-        setTimeout(() => this.adjustContainerHeight(), 800); // Aumenté el timeout para dar tiempo a las animaciones
+        // Ajustar altura y verificar botón - UNA SOLA VEZ
+        setTimeout(() => {
+            this.adjustContainerHeight();
+            this.toggleScrollButton();
+        }, 800);
     }
 
     renderAllCategories(container) {
@@ -464,24 +482,34 @@ class MenuEngine {
                     container.style.minHeight = availableSpace + 'px';
                 }
                 
-                document.body.style.overflowY = 'hidden';
-                document.documentElement.style.overflowY = 'hidden';
+                //document.body.style.overflowY = 'hidden';
+                //document.documentElement.style.overflowY = 'hidden';
             } else {
-                document.body.style.overflowY = 'auto';
-                document.documentElement.style.overflowY = 'auto';
+                //document.body.style.overflowY = 'auto';
+                //document.documentElement.style.overflowY = 'auto';
             }
         }, 50);
     }
 
     toggleScrollButton() {
         const scrollButton = document.getElementById('scrollToTop');
-        const scrollThreshold = 200;
+        const scrollThreshold = 100;
         
-        if (!scrollButton) return;
+        if (!scrollButton) {
+            return;
+        }
         
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        // Verificar scroll del window
+        const windowScrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
         
-        if (scrollPosition > scrollThreshold) {
+        // Verificar scroll del contenedor
+        const container = document.querySelector(this.config.containerSelector);
+        const containerScrollPosition = container ? container.scrollTop : 0;
+        
+        // Si cualquiera de los dos tiene scroll, mostrar el botón
+        const totalScrollPosition = Math.max(windowScrollPosition, containerScrollPosition);
+        
+        if (totalScrollPosition > scrollThreshold) {
             scrollButton.classList.add('visible');
         } else {
             scrollButton.classList.remove('visible');
@@ -489,28 +517,60 @@ class MenuEngine {
     }
 
     scrollToTop() {
-        const startPosition = window.pageYOffset;
-        const startTime = performance.now();
-        const duration = 1200;
+        const container = document.querySelector(this.config.containerSelector);
+        const windowScrollPosition = window.pageYOffset || 0;
+        const containerScrollPosition = container ? container.scrollTop : 0;
         
-        function easeOutQuart(t) {
-            return 1 - (--t) * t * t * t;
-        }
-        
-        function animateScroll(currentTime) {
-            const timeElapsed = currentTime - startTime;
-            const progress = Math.min(timeElapsed / duration, 1);
-            const easedProgress = easeOutQuart(progress);
-            const currentPosition = startPosition * (1 - easedProgress);
+        // Determinar cuál scroll usar
+        if (containerScrollPosition > windowScrollPosition) {
+            // Scroll del contenedor
+            const startPosition = containerScrollPosition;
+            const startTime = performance.now();
+            const duration = 1200;
             
-            window.scrollTo(0, currentPosition);
-            
-            if (progress < 1) {
-                requestAnimationFrame(animateScroll);
+            function easeOutQuart(t) {
+                return 1 - (--t) * t * t * t;
             }
+            
+            function animateScroll(currentTime) {
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const easedProgress = easeOutQuart(progress);
+                const currentPosition = startPosition * (1 - easedProgress);
+                
+                container.scrollTo(0, currentPosition);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+            
+            requestAnimationFrame(animateScroll);
+        } else {
+            // Scroll del window
+            const startPosition = windowScrollPosition;
+            const startTime = performance.now();
+            const duration = 1200;
+            
+            function easeOutQuart(t) {
+                return 1 - (--t) * t * t * t;
+            }
+            
+            function animateScroll(currentTime) {
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const easedProgress = easeOutQuart(progress);
+                const currentPosition = startPosition * (1 - easedProgress);
+                
+                window.scrollTo(0, currentPosition);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+            
+            requestAnimationFrame(animateScroll);
         }
-        
-        requestAnimationFrame(animateScroll);
     }
 
     // Funciones auxiliares
