@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Rey de la Salchipapa Miami</title>
+    <link rel="stylesheet" href="assets/css/menu.css">
+</head>
+<body>
+    <!-- FILA 1: LOGO -->
+    <div class="logo-row">
+        <div class="logo-container">
+            <img src="assets/img/logo.webp"
+                 alt="El Rey de la Salchipapa Miami" 
+                 class="mi-logo"
+                 onerror="this.style.display='none'; document.querySelector('.logo-texto-respaldo').style.display='block';">
+            
+            <div class="logo-texto-respaldo">
+                <div class="crown"></div>
+                <div class="logo-text">
+                    <div class="logo-line1">
+                        <span class="logo-el">El</span>
+                        <span class="logo-rey">Rey</span>
+                        <span class="logo-dela">de la</span>
+                    </div>
+                    <div class="logo-line2">
+                        <span class="logo-salchi">Salchi</span>
+                        <span class="logo-papa">papa</span>
+                    </div>
+                    <div class="logo-miami">Miami</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILA 2: CARRUSEL -->
+    <div class="carousel-row">
+        <div class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-slide slide-1" id="slide">
+                    <div class="carousel-indicators">
+                        <div class="indicator active" onclick="goToSlide(0)"></div>
+                        <div class="indicator" onclick="goToSlide(1)"></div>
+                        <div class="indicator" onclick="goToSlide(2)"></div>
+                        <div class="indicator" onclick="goToSlide(3)"></div>
+                        <div class="indicator" onclick="goToSlide(4)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILA 3: MENÚ -->
+    <div class="menu-row">
+        <div class="menu-buttons">
+            <div class="button-row button-row-top">
+                <a href="cuisine.html" class="menu-button btn-cuisine" onclick="return handleNavigation(event, 'cuisine')">
+                    <div class="emoji">🍽️</div>
+                    <div class="text">Cuisine</div>
+                </a>
+                <a href="drinks.html" class="menu-button btn-drinks" onclick="return handleNavigation(event, 'drinks')">
+                    <div class="emoji">🍷</div>
+                    <div class="text">Drinks</div>
+                </a>
+            </div>
+            <div class="button-row button-row-bottom">
+                <a href="cocktails.html" class="menu-button btn-cocktails" onclick="return handleNavigation(event, 'cocktails')">
+                    <div class="emoji">🍸</div>
+                    <div class="text">Cocktails</div>
+                </a>
+                <a href="bakery.html" class="menu-button btn-bakery" onclick="return handleNavigation(event, 'bakery')">
+                    <div class="emoji">🧁</div>
+                    <div class="text">Bakery</div>
+                </a>
+                <a href="toGo.html" class="menu-button btn-togo" onclick="return handleNavigation(event, 'togo')">
+                    <div class="emoji">📦</div>
+                    <div class="text">To Go Menu</div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="bottom-content">
+            <!-- Banner promocional -->
+            <div class="promotional-banner">
+                <img src="assets/img/banner_footer.webp" 
+                     alt="El Rey de la Salchipapa Miami - Banner Promocional" 
+                     class="banner-image"
+                     onload="hideBannerFallback()" 
+                     onerror="showBannerFallback()">
+                    
+                    <div class="banner-fallback" id="bannerFallback">
+                        <div class="banner-graffiti">
+                            <div class="graffiti-crown">👑</div>
+                            <div class="graffiti-text">
+                                <span class="graffiti-el">El</span>
+                                <span class="graffiti-rey">Rey</span>
+                                <span class="graffiti-dela">de la</span>
+                                <span class="graffiti-salchi">Salchi</span><span class="graffiti-papa">papa</span>
+                                <span class="graffiti-miami">Miami</span>
+                            </div>
+                            <div class="graffiti-slogan">"La Original - Hay Inventores"</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información de dirección -->
+                <div class="restaurant-info">
+                    <div class="address-container">
+                        <div class="address-icon">📍</div>
+                        <div class="address-details">
+                            <div class="address-line">11635 Red Rd</div>
+                            <div class="address-line">Miramar, FL 33025</div>
+                            <div class="address-line phone-line">
+                                <span class="phone-icon">📞</span>
+                                <span class="phone-number">754-254-1977</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        let carouselInterval;
+        let isUserInteracting = false;
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        
+        const slides = [
+            { class: 'slide-1' },
+            { class: 'slide-2' },
+            { class: 'slide-3' },
+            { class: 'slide-4' },
+            { class: 'slide-5' }
+        ];
+
+        function updateSlide() {
+            const slideElement = document.getElementById('slide');
+            const indicators = document.querySelectorAll('.indicator');
+
+            slideElement.className = `carousel-slide ${slides[currentSlide].class}`;
+
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlide);
+            });
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            updateSlide();
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            updateSlide();
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateSlide();
+        }
+
+        function startCarousel() {
+            if (!isUserInteracting) {
+                carouselInterval = setInterval(() => {
+                    if (!isUserInteracting) {
+                        nextSlide();
+                    }
+                }, 6000);
+            }
+        }
+
+        function stopCarousel() {
+            clearInterval(carouselInterval);
+        }
+
+        function resumeCarousel() {
+            setTimeout(() => {
+                isUserInteracting = false;
+                startCarousel();
+            }, 2000);
+        }
+
+        // Funciones de touch/swipe
+        function handleStart(e) {
+            isDragging = true;
+            isUserInteracting = true;
+            stopCarousel();
+            
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            currentX = startX;
+        }
+
+        function handleMove(e) {
+            if (!isDragging) return;
+            
+            e.preventDefault();
+            currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        }
+
+        function handleEnd(e) {
+            if (!isDragging) return;
+            
+            isDragging = false;
+            const diffX = currentX - startX;
+            const threshold = 50;
+            
+            if (Math.abs(diffX) > threshold) {
+                if (diffX > 0) {
+                    prevSlide();
+                } else {
+                    nextSlide();
+                }
+            }
+            
+            resumeCarousel();
+        }
+
+        // Manejo de navegación híbrida (enlaces + JavaScript)
+        function handleNavigation(event, section) {
+            const buttonText = {
+                'cuisine': 'Cuisine',
+                'drinks': 'Drinks', 
+                'cocktails': 'Cocktails',
+                'bakery': 'Bakery',
+                'togo': 'To Go Menu'
+            };
+
+            // Si estamos en Android con interfaz nativa
+            if (typeof Android !== 'undefined') {
+                event.preventDefault(); // Cancelar navegación HTML
+                
+                const link = event.target.closest('a');
+                const filename = link.href.split('/').pop();
+                
+                // Usar interfaz nativa de Android
+                if (Android.navigateToPage) {
+                    Android.navigateToPage(filename);
+                } else if (Android.fileExists && !Android.fileExists(filename)) {
+                    // Mostrar mensaje si el archivo no existe
+                    showNavigationFeedback(`${buttonText[section]} - Próximamente`, false);
+                } else {
+                    // Navegación manual con ruta completa
+                    const fullPath = window.location.href.replace(/[^/]*$/, filename);
+                    window.location.href = fullPath;
+                }
+                return false; // Cancelar navegación HTML
+            }
+            
+            // En web normal, permitir navegación HTML estándar
+            // Opcional: mostrar feedback
+            showNavigationFeedback(buttonText[section], true);
+            return true; // Permitir navegación HTML
+        }
+
+        // Función simplificada de feedback
+        function showNavigationFeedback(sectionName, isLoading = false) {
+            const notification = document.createElement('div');
+            
+            const message = isLoading ? 
+                `Cargando ${sectionName}...` : 
+                sectionName;
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.9);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: bold;
+                z-index: 1000;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                text-align: center;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Remover notificación
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, isLoading ? 2000 : 1000);
+        }
+
+        // Funciones para manejar el banner
+        function showBannerFallback() {
+            const bannerImage = document.querySelector('.banner-image');
+            const bannerFallback = document.getElementById('bannerFallback');
+            
+            if (bannerImage) {
+                bannerImage.style.display = 'none';
+            }
+            if (bannerFallback) {
+                bannerFallback.style.display = 'flex';
+            }
+        }
+
+        function hideBannerFallback() {
+            const bannerFallback = document.getElementById('bannerFallback');
+            if (bannerFallback) {
+                bannerFallback.style.display = 'none';
+            }
+        }
+
+        // Función de inicialización para Android
+        function initializeAndroidNavigation() {
+            // Configurar interfaz para Android si es necesario
+            if (typeof Android !== 'undefined') {
+                console.log('Interfaz Android detectada');
+                
+                // Opcional: Notificar a Android que la página está lista
+                if (Android.onPageReady) {
+                    Android.onPageReady();
+                }
+            }
+            
+            // Detectar y manejar botón "atrás" de Android
+            if (window.history && history.pushState) {
+                window.addEventListener('popstate', function(event) {
+                    // Manejar navegación hacia atrás
+                    if (typeof Android !== 'undefined' && Android.onBackPressed) {
+                        Android.onBackPressed();
+                    }
+                });
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar navegación Android
+            initializeAndroidNavigation();
+            
+            // Configurar el carrusel inmediatamente
+            updateSlide();
+            
+            // Esperar un momento antes de iniciar el auto-play para evitar conflictos
+            setTimeout(() => {
+                startCarousel();
+            }, 1000);
+            
+            const carousel = document.querySelector('.carousel');
+            
+            // Eventos de mouse
+            carousel.addEventListener('mouseenter', () => {
+                isUserInteracting = true;
+                stopCarousel();
+            });
+
+            carousel.addEventListener('mouseleave', () => {
+                if (!isDragging) {
+                    resumeCarousel();
+                }
+            });
+
+            // Eventos de touch/swipe para móviles
+            carousel.addEventListener('touchstart', handleStart, { passive: false });
+            carousel.addEventListener('touchmove', handleMove, { passive: false });
+            carousel.addEventListener('touchend', handleEnd);
+
+            // Eventos de mouse para desktop
+            carousel.addEventListener('mousedown', handleStart);
+            carousel.addEventListener('mousemove', handleMove);
+            carousel.addEventListener('mouseup', handleEnd);
+            carousel.addEventListener('mouseleave', () => {
+                if (isDragging) {
+                    handleEnd();
+                }
+            });
+
+            // Mejorar los indicadores
+            document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                indicator.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    isUserInteracting = true;
+                    stopCarousel();
+                    goToSlide(index);
+                    resumeCarousel();
+                });
+            });
+
+            // Prevenir selección de texto durante drag
+            carousel.addEventListener('selectstart', e => e.preventDefault());
+            carousel.style.userSelect = 'none';
+        });
+    </script>
+</body>
+</html>
