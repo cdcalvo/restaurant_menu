@@ -518,6 +518,7 @@ body::after {
     animation: statusEnter 1s ease-out 2s forwards;
     display: flex;
     align-items: center;
+    margin-top: clamp(8px, 2vh, 16px);
 }
 
 .banner-image {
