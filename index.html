@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Rey de la Salchipapa - Miami</title>
+    <meta name="theme-color" content="#0A0A0A">
+    <meta name="color-scheme" content="dark">
+<style>
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-touch-callout: none;
+        }
+
+        :root {
+            --brand-gold: #FFC300;
+            --brand-red: #E4291B;
+            --gold-accent: #E8A317;
+            --rich-black: #0A0A0A;
+            --charcoal: #1A1A1A;
+            --soft-white:      #FEFEFE;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--rich-black);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Fondo con gradientes radiales */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 0%,   rgba(255,195,0,0.07)  0%, transparent 55%),
+                radial-gradient(ellipse at 80% 100%, rgba(232,163,23,0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 50%,  rgba(228,41,27,0.04)  0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Patrón de puntos sutil */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><circle cx="30" cy="30" r="1" fill="rgba(255,195,0,0.06)"/><circle cx="10" cy="10" r="0.8" fill="rgba(232,163,23,0.06)"/><circle cx="50" cy="50" r="0.8" fill="rgba(228,41,27,0.06)"/></svg>');
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== ANIMACIONES ===== */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.2), 0 8px 32px rgba(0,0,0,0.5); }
+            50%       { box-shadow: 0 0 40px rgba(255,215,0,0.4), 0 8px 32px rgba(0,0,0,0.5); }
+        }
+        @keyframes shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position:  200% center; }
+        }
+
+        /* ===== FILA 1: HEADER ===== */
+        .header-row {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(16px, 3vh, 28px) clamp(20px, 5vw, 40px);
+            position: relative;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(12px);
+            animation: fadeInDown 0.7s ease-out both;
+        }
+
+        /* Línea tricolor inferior del header */
+        .header-row::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--brand-gold), var(--brand-red));
+        }
+
+        .header-logo {
+            height: clamp(100px, 20vw, 200px);
+            width: auto;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 4px 16px rgba(0,0,0,0.6));
+            transition: transform 0.3s ease;
+        }
+        .header-logo:hover { transform: scale(1.04); }
+
+        /* Fallback si no carga el logo */
+        .logo-fallback {
+            display: none;
+            text-align: center;
+        }
+        .logo-fallback h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--brand-gold), var(--gold-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .logo-fallback p {
+            font-size: clamp(0.7rem, 2vw, 0.9rem);
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: rgba(255,248,220,0.5);
+        }
+
+        /* ===== FILA 2: IMAGEN PROMO ===== */
+        .content-row {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(12px, 2.5vh, 24px) clamp(16px, 4vw, 32px);
+            position: relative;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .promo-image-container {
+            width: 100%;
+            height: 100%;
+            max-width: clamp(400px, 90vw, 900px);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            /* Tricolor border */
+            background-image:
+                linear-gradient(var(--charcoal), var(--charcoal)),
+                linear-gradient(135deg,
+                    var(--brand-gold) 0%,
+                    var(--brand-red)    100%);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            animation: scaleIn 0.8s ease-out 0.3s both, pulseGlow 4s ease-in-out 1s infinite;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+        }
+
+        /* ===== CARRUSEL ===== */
+        .carousel {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: 18px;
+        }
+        .carousel-track {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            width: 100%;
+            height: 100%;
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .carousel-slide::before {
+            content: '';
+            position: absolute; inset: 0;
+            background-image: var(--slide-bg);
+            background-size: cover;
+            background-position: center;
+            filter: blur(18px) brightness(0.45);
+            transform: scale(1.1);
+            z-index: 0;
+        }
+        .carousel-slide img {
+            position: relative;
+            z-index: 1;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+        .carousel-slide:hover img { transform: scale(1.02); }
+
+        /* Velo de marca: como la imagen del carrusel es dinámica (puede subir
+           cualquier promo), este vignette oscurece un poco los bordes de
+           cualquier foto para que siempre se sienta integrada al negro de
+           la app, sin taparle el contenido del centro. */
+        .carousel-slide::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(10, 10, 10, 0.75) 100%);
+            pointer-events: none;
+        }
+        .carousel-btn {
+            display: none;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 20;
+            width: clamp(36px, 6vw, 50px);
+            height: clamp(36px, 6vw, 50px);
+            border-radius: 50%;
+            background: rgba(10, 10, 10, 0.75);
+            border: 1px solid rgba(255, 215, 0, 0.35);
+            color: var(--brand-gold);
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(6px);
+            line-height: 1;
+        }
+        .carousel-btn:hover {
+            background: rgba(255, 215, 0, 0.2);
+            border-color: var(--brand-gold);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .carousel-btn-prev { left: clamp(8px, 2vw, 16px); }
+        .carousel-btn-next { right: clamp(8px, 2vw, 16px); }
+        .carousel-dots {
+            position: absolute;
+            bottom: clamp(10px, 2vh, 16px);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 7px;
+            z-index: 20;
+        }
+        .carousel-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+        }
+        .carousel-dot.active {
+            background: var(--brand-gold);
+            width: 22px;
+            border-radius: 4px;
+        }
+
+        /* ===== FILA 3: BOTÓN CTA ===== */
+        .action-row {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: clamp(14px, 2.5vh, 24px) clamp(20px, 5vw, 40px);
+            position: relative;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.7);
+            backdrop-filter: blur(12px);
+            animation: fadeInUp 0.7s ease-out 0.6s both;
+        }
+
+        /* Línea tricolor superior del footer */
+        .action-row::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--brand-gold), var(--brand-red));
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-align: center;   /* si el texto envuelve en viewports angostos, centrado */
+            text-decoration: none;
+            width: 100%;
+            max-width: clamp(260px, 60vw, 420px);
+            padding: clamp(14px, 3vh, 20px) clamp(28px, 7vw, 52px);
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            /* Gradiente animado tipo shimmer */
+            background: linear-gradient(
+                135deg,
+                var(--brand-gold)  0%,
+                var(--gold-accent)      40%,
+                var(--brand-gold)  60%,
+                #FFC200                 100%
+            );
+            background-size: 200% auto;
+            color: var(--rich-black);
+            font-family: 'Bungee', 'Montserrat', sans-serif;
+            font-size: clamp(14px, 3.2vw, 20px);
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            box-shadow: 0 6px 24px rgba(255,215,0,0.35), 0 2px 8px rgba(0,0,0,0.4);
+            transition: all 0.3s ease;
+            animation: shimmer 3s linear infinite;
+        }
+        .cta-button::after {
+            content: '→';
+            font-size: 1.1em;
+            transition: transform 0.2s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 36px rgba(255,215,0,0.5), 0 4px 12px rgba(0,0,0,0.4);
+        }
+        .cta-button:hover::after { transform: translateX(4px); }
+        .cta-button:active { transform: scale(0.98); }
+    </style>
+    <link rel="stylesheet" href="assets/css/fonts.css">
+</head>
+<body>
+    <!-- FILA 2: CARRUSEL PROMOCIONAL -->
+    <div class="content-row">
+        <div class="promo-image-container">
+            <div class="carousel">
+                <div class="carousel-track" id="carouselTrack"></div>
+                <div class="carousel-dots" id="carouselDots"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FILA 3: BOTÓN -->
+    <div class="action-row">
+        <a href="menu.html" class="cta-button" id="ctaButton" style="pointer-events:none;opacity:0.5;">
+            <span id="ctaText">Sincronizando...</span>
+        </a>
+    </div>
+
+    <script src="data/snapshot.js"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/db.js"></script>
+    <script src="assets/js/carousel.js"></script>
+    <script src="assets/js/index.js"></script>
+    <script>
+      // Demo estático: no hay backend con el que sincronizar, el snapshot
+      // (data/snapshot.js) ya trae todo lo necesario. Ver README.md.
+      (async function() {
+        const btn   = document.getElementById('ctaButton');
+        const label = document.getElementById('ctaText');
+        const stored = await MenuDB.get();
+
+        label.textContent = stored ? 'Ver Nuestro Menú' : 'Sin datos — corre scripts/refresh.mjs';
+        if (!stored) { btn.style.opacity = '0.4'; return; }
+
+        btn.style.pointerEvents = '';
+        btn.style.opacity = '';
+      })();
+    </script>
+</body>
+</html>
+
+
+

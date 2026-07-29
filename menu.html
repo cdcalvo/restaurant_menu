@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#0A0A0A">
+    <meta name="color-scheme" content="dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Restaurante</title>
+<link rel="stylesheet" href="assets/css/fonts.css">
+    <link rel="stylesheet" href="assets/css/menu.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-section">
+                <div class="logo-bg"></div>
+                <div class="logo">
+                    <img id="header-logo" src="" alt="Logo" class="header-logo" style="display:none;">
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-section">
+            <div class="hero-image">
+                <div class="carousel">
+                    <div class="carousel-track" id="carouselTrack"></div>
+                    <div class="carousel-dots" id="carouselDots"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brand Accent: texto configurable desde Ajustes → Apariencia.
+             Oculto por completo (display:none inline, sin FOUC) hasta que
+             menu.js confirme que hay un eslogan configurado. -->
+        <div class="brand-accent-section" id="brandAccentSection" style="display:none;">
+            <div class="brand-accent" id="brandAccentText"></div>
+        </div>
+
+        <!-- Menu Categories -->
+        <div class="menu-section">
+            <h2 class="section-title">Nuestro Menú</h2>
+            <div class="categories-grid" id="categories-grid">
+                <!-- Las tarjetas se generan dinámicamente desde MENU_CONFIG en el script -->
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-section">
+            <div class="restaurant-info">
+                <div class="qr-section">
+                    <h2 class="qr-title" id="qr-title">Conéctate con nosotros</h2>
+                    <p class="qr-subtitle">"La salchipapa que manda en Miami"</p>
+
+                    <div class="qr-grid" id="qr-grid">
+                        <!-- Generado dinámicamente desde Android.getQrCodes() -->
+                    </div>
+                    <p class="qr-blessing">✝︎ Este Menú fue Realizado con el Amor de Dios.<br>Dios te Bendiga 🙏</p>
+                </div>
+            </div>
+            <!-- MODAL QR -->
+            <div id="qrModal" class="qr-modal-overlay" onclick="closeQrModal()">
+                <div class="qr-modal-container" onclick="event.stopPropagation()">
+                    <button class="qr-modal-close" onclick="closeQrModal()">&times;</button>
+                    <p class="qr-modal-label" id="qrModalLabel"></p>
+                    <div class="qr-modal-image-wrapper">
+                        <img id="qrModalImage" src="" alt="QR Code">
+                    </div>
+                    <p class="qr-modal-hint">Apunta tu cámara para escanear</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="data/snapshot.js"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/db.js"></script>
+    <script src="assets/js/adapter.js"></script>
+    <script src="assets/js/carousel.js"></script>
+    <script src="assets/js/menu.js"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,690 @@
+// menu-engine.js - Motor principal reutilizable
+class MenuEngine {
+    constructor(config) {
+        this.data = config.data || {};
+        this.config = {
+            containerSelector: config.containerSelector || '.container',
+            categoryTabsSelector: config.categoryTabsSelector || '.category-scroll',
+            modalId: config.modalId || 'dishModal',
+            allCategoryKey: config.allCategoryKey || 'all',
+            showImages: config.showImages !== false,
+            itemImageSize: config.itemImageSize || '100px',
+            modalImageHeight: config.modalImageHeight || '320px',
+            ...config
+        };
+        
+        // Idioma de descripciones (configurable desde el panel admin).
+        // Defaults seguros si la tablet tiene datos cacheados sin config.
+        this.langConfig = {
+            cardDescriptionLang: 'en',
+            modalDescriptionOrder: 'en_first',
+            ...(config.menuConfig || {})
+        };
+
+        this.currentCategory = this.config.allCategoryKey;
+        this.init();
+        this.scrollPosition = 0;
+        this.currentItemIndex = 0;
+        this.currentItemsList = [];
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.renderInitialView();
+        this.setupScrollHandling();
+    }
+
+    setupEventListeners() {
+        // Event listeners para categorías
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-tab')) {
+                const category = e.target.getAttribute('data-category');
+                this.switchCategory(category, e.target);
+            }
+        });
+
+        // Event listeners para modales
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeModal();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.id === this.config.modalId) {
+                this.closeModal();
+            }
+        });
+    }
+
+    setupScrollHandling() {
+        const toggleButton = () => this.toggleScrollButton();
+        const container = document.querySelector(this.config.containerSelector);
+        
+        // Si el contenedor tiene overflow-y: auto, escuchar su scroll
+        if (container) {
+            container.addEventListener('scroll', toggleButton, { passive: true });
+        }
+        
+        // También escuchar window scroll como fallback
+        window.addEventListener('scroll', toggleButton, { passive: true });
+        window.addEventListener('load', toggleButton);
+        document.addEventListener('DOMContentLoaded', toggleButton);
+        
+        // Verificar cada 3 segundos como fallback
+        setInterval(toggleButton, 3000);
+        
+        // Event listener para redimensionar ventana
+        window.addEventListener('resize', () => {
+            setTimeout(() => this.adjustContainerHeight(), 100);
+            setTimeout(toggleButton, 200);
+        });
+    }
+
+    renderInitialView() {
+        this.renderCategories();
+        
+        // Determinar categoría inicial basada en el número de categorías
+        const categories = Object.keys(this.data).filter(key => 
+            key !== this.config.allCategoryKey && 
+            this.data[key] && 
+            Array.isArray(this.data[key]) && 
+            this.data[key].length > 0
+        );
+        
+        if (categories.length === 1) {
+            // Si solo hay una categoría, empezar directamente con esa
+            this.currentCategory = categories[0];
+        } else {
+            // Si hay múltiples categorías o ninguna, usar 'all'
+            this.currentCategory = this.config.allCategoryKey;
+        }
+        
+        this.renderMenuItems(this.currentCategory);
+        setTimeout(() => this.adjustContainerHeight(), 100);
+    }
+
+    renderCategories() {
+        const categoryContainer = document.querySelector(this.config.categoryTabsSelector);
+        if (!categoryContainer) return;
+
+        // Obtener categorías válidas (excluyendo 'all')
+        const categories = Object.keys(this.data).filter(key => 
+            key !== this.config.allCategoryKey && 
+            this.data[key] && 
+            Array.isArray(this.data[key]) && 
+            this.data[key].length > 0
+        );
+
+        let html = '';
+
+        // Solo mostrar "All" si hay más de una categoría
+        if (categories.length > 1) {
+            html = `<div class="category-tab active" data-category="${this.escapeHtml(this.config.allCategoryKey)}">
+                ${this.escapeHtml(this.config.categoryLabels?.[this.config.allCategoryKey] || 'All')}
+            </div>`;
+
+            // Agregar el resto de categorías
+            categories.forEach(category => {
+                const label = this.config.categoryLabels?.[category] || this.formatCategoryName(category);
+                html += `<div class="category-tab" data-category="${this.escapeHtml(category)}">${this.escapeHtml(label)}</div>`;
+            });
+        } else if (categories.length === 1) {
+            // Si solo hay una categoría, mostrarla como activa directamente
+            const singleCategory = categories[0];
+            const label = this.config.categoryLabels?.[singleCategory] || this.formatCategoryName(singleCategory);
+            html = `<div class="category-tab active" data-category="${this.escapeHtml(singleCategory)}">${this.escapeHtml(label)}</div>`;
+            
+            // Actualizar la categoría actual
+            this.currentCategory = singleCategory;
+        } else {
+            // Si no hay categorías válidas, mostrar mensaje
+            html = '<div style="color: white; padding: 12px; text-align: center;">No categories available</div>';
+        }
+        
+        categoryContainer.innerHTML = html;
+    }
+
+    formatCategoryName(category) {
+        return category.charAt(0).toUpperCase() + 
+               category.slice(1).replace(/([A-Z])/g, ' $1').trim();
+    }
+
+    renderMenuItems(category) {
+        // Guardar lista plana para navegación del modal
+        if (category === this.config.allCategoryKey) {
+            this.currentItemsList = Object.keys(this.data)
+                .filter(k => k !== this.config.allCategoryKey)
+                .flatMap(k => this.data[k] || []);
+        } else {
+            this.currentItemsList = this.data[category] || [];
+        }
+
+        const menuList = document.querySelector('.menu-list');
+        if (!menuList) return;
+
+        // Remover clase de animación anterior si existe
+        menuList.classList.remove('fade-in-sequence');
+        menuList.style.animation = 'none';
+        menuList.innerHTML = '';
+
+        if (category === this.config.allCategoryKey) {
+            this.renderAllCategories(menuList);
+        } else {
+            this.renderSingleCategory(menuList, category);
+        }
+
+        // Aplicar animación escalonada después de renderizar - UNA SOLA VEZ
+        setTimeout(() => {
+            menuList.classList.add('fade-in-sequence');
+            this.toggleScrollButton();
+        }, 100);
+
+        // Ajustar altura y verificar botón - UNA SOLA VEZ
+        setTimeout(() => {
+            this.adjustContainerHeight();
+            this.toggleScrollButton();
+        }, 800);
+    }
+
+    renderAllCategories(container) {
+        const categories = Object.keys(this.data).filter(key => key !== this.config.allCategoryKey);
+        // Índice global del ítem dentro de la lista aplanada (mismo orden que
+        // produce flatMap en createMenuItem/openModalByIndex), para que cada
+        // card quede ligada a su posición real y no a una búsqueda por nombre.
+        let itemGlobalIndex = 0;
+
+        categories.forEach((categoryKey, index) => {
+            if (this.data[categoryKey] && Array.isArray(this.data[categoryKey])) {
+                const items = this.data[categoryKey];
+                const isFirstSection = index === 0;
+                
+                // Título de sección
+                const sectionHeader = document.createElement('div');
+                const categoryTitle = this.config.categoryLabels?.[categoryKey] || 
+                                   this.formatCategoryName(categoryKey).toUpperCase();
+                
+                sectionHeader.innerHTML = `
+                    <h3 style="
+                        color: white;
+                        font-size: 28px;
+                        font-weight: 900;
+                        margin: ${isFirstSection ? '10px' : '32px'} 0 24px 0;
+                        text-align: center;
+                        text-shadow: 3px 3px 0px #000;
+                        letter-spacing: 1px;
+                        text-transform: uppercase;
+                        padding-top: ${isFirstSection ? '10px' : '20px'};
+                        scroll-margin-top: 140px;
+                    ">${this.escapeHtml(categoryTitle)}</h3>
+                `;
+                container.appendChild(sectionHeader);
+                
+                // Items de la categoría
+                items.forEach(item => {
+                    container.appendChild(this.createMenuItem(item, itemGlobalIndex));
+                    itemGlobalIndex++;
+                });
+            }
+        });
+    }
+
+    renderSingleCategory(container, category) {
+        const items = this.data[category];
+
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            container.innerHTML = '<p style="color: white; text-align: center; padding: 20px;">No items in this category</p>';
+            return;
+        }
+
+        items.forEach((item, index) => {
+            container.appendChild(this.createMenuItem(item, index));
+        });
+    }
+
+    createMenuItem(item, index) {
+        const menuItem = document.createElement('div');
+        menuItem.className = 'menu-item';
+        menuItem.style.cursor = 'pointer';
+        menuItem.onclick = () => {
+            // El índice se captura al crear la card (posición real dentro de
+            // la lista actual), en vez de re-buscarlo por nombre — evita que
+            // dos platos con el mismo título en subcategorías distintas
+            // abran el modal equivocado.
+            this.currentItemIndex = index;
+
+            // Usar openModalByIndex que ya maneja el item completo
+            this.openModalByIndex(this.currentItemIndex);
+        };
+        
+        // Todo dato del admin que entra a innerHTML pasa por escapeHtml:
+        // un plato llamado "Combo <b>2x1</b> & más" se muestra literal.
+        const safeTitle       = this.escapeHtml(item.title || '');
+        const cardDescription = this.pickCardDescription(item);
+        const safeDescription = this.escapeHtml(cardDescription);
+        const safeEmoji       = this.escapeHtml(item.emoji || '🍽️');
+        const safeImage       = this.escapeHtml(item.image || '');
+
+        // Crear contenido de imagen/emoji
+        let imageContent = '';
+        if (this.config.showImages && item.image) {
+            imageContent = `
+                <img src="${safeImage}" alt="${safeTitle}"
+                     style="width: 100%; height: 100%; object-fit: cover; border-radius: 16px;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span style="font-size: 40px; display: none; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                    ${safeEmoji}
+                </span>
+            `;
+        } else {
+            imageContent = `
+                <span style="font-size: 40px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
+                    ${safeEmoji}
+                </span>
+            `;
+        }
+
+        // Crear descripción solo si existe
+        const descriptionHtml = cardDescription ?
+            `<div class="item-description">${safeDescription}</div>` : '';
+
+        // Crear precio solo si existe
+        const priceHtml = item.price ?
+            `<div class="item-price">${this.formatPrice(item.price, item.priceLabels)}</div>` : '';
+
+        // Crear footer solo si hay precio o botón
+        const footerHtml = priceHtml ?
+            `<div class="item-footer">${priceHtml}</div>` : '';
+
+        menuItem.innerHTML = `
+            <div class="item-image" style="position: relative; overflow: hidden;">
+                ${imageContent}
+            </div>
+            <div class="item-content">
+                <div class="item-title">${safeTitle || 'Untitled'}</div>
+                ${descriptionHtml}
+                ${footerHtml}
+            </div>
+        `;
+
+        return menuItem;
+    }
+
+    // ── Descripciones bilingües ──────────────────────────────────────────
+    // descriptionEn/descriptionEs vienen del adapter; item.description es el
+    // formato viejo (por si la tablet tiene datos cacheados sin los campos).
+
+    getDescriptions(item) {
+        const legacy = item.description || '';
+        return {
+            en: item.descriptionEn !== undefined ? item.descriptionEn : legacy,
+            es: item.descriptionEs !== undefined ? item.descriptionEs : '',
+        };
+    }
+
+    /** La card compacta muestra UNA descripción: el idioma configurado, con
+     *  fallback al otro si el plato no lo tiene. */
+    pickCardDescription(item) {
+        const d = this.getDescriptions(item);
+        return this.langConfig.cardDescriptionLang === 'es' ? (d.es || d.en) : (d.en || d.es);
+    }
+
+    /** El modal muestra ambas (cuando existen) en el orden configurado. */
+    pickModalDescriptions(item) {
+        const d = this.getDescriptions(item);
+        const ordered = this.langConfig.modalDescriptionOrder === 'es_first'
+            ? [d.es, d.en]
+            : [d.en, d.es];
+        const nonEmpty = ordered.filter(t => t && t.trim() !== '');
+        return { primary: nonEmpty[0] || '', secondary: nonEmpty[1] || '' };
+    }
+
+    switchCategory(category, element) {
+        // SOLUCIÓN ROBUSTA: Forzar actualización de todas las pestañas
+        const categoryContainer = document.querySelector(this.config.categoryTabsSelector);
+        
+        if (categoryContainer) {
+            // Buscar todas las pestañas de forma robusta
+            const allTabs = categoryContainer.querySelectorAll('.category-tab');
+            const allTabsGlobal = document.querySelectorAll('.category-tab');
+            const allTabsSet = new Set([...allTabs, ...allTabsGlobal]);
+            
+            // Remover active de TODAS las pestañas encontradas
+            allTabsSet.forEach(tab => {
+                if (tab.classList.contains('active')) {
+                    tab.classList.remove('active');
+                    // Forzar repintado del elemento
+                    tab.style.display = 'none';
+                    tab.offsetHeight; // Trigger reflow
+                    tab.style.display = '';
+                }
+            });
+        }
+        
+        // Agregar active a la pestaña seleccionada
+        let activeTab = element;
+        if (element) {
+            element.classList.add('active');
+        } else {
+            // Buscar la pestaña por data-category
+            activeTab = document.querySelector(`[data-category="${category}"]`);
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+        }
+
+        // Auto-scroll para hacer visible la pestaña activa
+        if (activeTab && categoryContainer) {
+            requestAnimationFrame(() => {
+                const containerRect = categoryContainer.getBoundingClientRect();
+                const tabRect = activeTab.getBoundingClientRect();
+                
+                if (tabRect.right > containerRect.right - 20 || tabRect.left < containerRect.left + 20) {
+                    const scrollLeft = activeTab.offsetLeft - (categoryContainer.offsetWidth / 2) + (activeTab.offsetWidth / 2);
+                    categoryContainer.scrollTo({
+                        left: Math.max(0, scrollLeft),
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        }
+
+        // Actualizar título de sección
+        const sectionTitle = document.querySelector('.section-title');
+        if (sectionTitle) {
+            sectionTitle.style.animation = 'none';
+            
+            if (category === this.config.allCategoryKey) {
+                sectionTitle.style.display = 'none';
+            } else {
+                const titleText = (this.config.categoryLabels?.[category] || 
+                                this.formatCategoryName(category)).toUpperCase();
+                sectionTitle.style.display = 'block';
+                sectionTitle.textContent = titleText;
+                
+                setTimeout(() => {
+                    sectionTitle.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }, 10);
+            }
+        }
+
+        this.currentCategory = category;
+        this.renderMenuItems(category);
+    }
+
+    // (openModal legacy eliminado — todo el flujo usa openModalByIndex)
+
+    closeModal() {
+        const modal = document.getElementById(this.config.modalId);
+    if (modal) {
+        modal.classList.remove('active');
+        
+        // Restaurar el scroll ANTES de remover modal-open
+        document.body.classList.remove('modal-open');
+        document.body.style.top = '';
+        
+        // Restaurar posición del scroll
+        window.scrollTo(0, this.scrollPosition);
+    }
+    }
+
+    adjustContainerHeight() {
+        const container = document.querySelector(this.config.containerSelector);
+        
+        if (!container) return;
+        
+        container.style.minHeight = 'auto';
+        document.body.style.overflowY = 'auto';
+        
+        setTimeout(() => {
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            
+            if (documentHeight <= windowHeight) {
+                const containerTop = container.offsetTop;
+                const currentContainerHeight = container.offsetHeight;
+                const availableSpace = windowHeight - containerTop - 40;
+                
+                if (availableSpace > currentContainerHeight) {
+                    container.style.minHeight = availableSpace + 'px';
+                }
+                
+                //document.body.style.overflowY = 'hidden';
+                //document.documentElement.style.overflowY = 'hidden';
+            } else {
+                //document.body.style.overflowY = 'auto';
+                //document.documentElement.style.overflowY = 'auto';
+            }
+        }, 50);
+    }
+
+    toggleScrollButton() {
+        const scrollButton = document.getElementById('scrollToTop');
+        const scrollThreshold = 100;
+        
+        if (!scrollButton) {
+            return;
+        }
+        
+        // Verificar scroll del window
+        const windowScrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+        
+        // Verificar scroll del contenedor
+        const container = document.querySelector(this.config.containerSelector);
+        const containerScrollPosition = container ? container.scrollTop : 0;
+        
+        // Si cualquiera de los dos tiene scroll, mostrar el botón
+        const totalScrollPosition = Math.max(windowScrollPosition, containerScrollPosition);
+        
+        if (totalScrollPosition > scrollThreshold) {
+            scrollButton.classList.add('visible');
+        } else {
+            scrollButton.classList.remove('visible');
+        }
+    }
+
+    scrollToTop() {
+        const container = document.querySelector(this.config.containerSelector);
+        const windowScrollPosition = window.pageYOffset || 0;
+        const containerScrollPosition = container ? container.scrollTop : 0;
+        
+        // Determinar cuál scroll usar
+        if (containerScrollPosition > windowScrollPosition) {
+            // Scroll del contenedor
+            const startPosition = containerScrollPosition;
+            const startTime = performance.now();
+            const duration = 1200;
+            
+            function easeOutQuart(t) {
+                return 1 - (--t) * t * t * t;
+            }
+            
+            function animateScroll(currentTime) {
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const easedProgress = easeOutQuart(progress);
+                const currentPosition = startPosition * (1 - easedProgress);
+                
+                container.scrollTo(0, currentPosition);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+            
+            requestAnimationFrame(animateScroll);
+        } else {
+            // Scroll del window
+            const startPosition = windowScrollPosition;
+            const startTime = performance.now();
+            const duration = 1200;
+            
+            function easeOutQuart(t) {
+                return 1 - (--t) * t * t * t;
+            }
+            
+            function animateScroll(currentTime) {
+                const timeElapsed = currentTime - startTime;
+                const progress = Math.min(timeElapsed / duration, 1);
+                const easedProgress = easeOutQuart(progress);
+                const currentPosition = startPosition * (1 - easedProgress);
+                
+                window.scrollTo(0, currentPosition);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animateScroll);
+                }
+            }
+            
+            requestAnimationFrame(animateScroll);
+        }
+    }
+
+    // Funciones auxiliares
+    formatPrice(price, labels = []) {
+        if (!price) return '';
+        const parts = Array.isArray(price)
+            ? price
+            : price.trim().split(/\s+/);
+
+        if (parts.length === 1) return `$${this.escapeHtml(parts[0])}`;
+
+        if (labels && labels.length > 0) {
+            return parts.map((p, i) =>
+                `<span class="price-option">
+                    <span class="price-label">${this.escapeHtml(labels[i] || '')}</span>
+                    $${this.escapeHtml(p)}
+                </span>`
+            ).join('');
+        }
+        return parts.map(p => `$${this.escapeHtml(p)}`).join(' / ');
+    }
+
+    // Escape HTML completo (& < > " ') para interpolar datos en innerHTML
+    escapeHtml(text) {
+        return String(text)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    openModalByIndex(index) {
+        const cat = this.currentCategory;
+        let items = [];
+        if (cat === this.config.allCategoryKey) {
+            items = Object.keys(this.data)
+                .filter(k => k !== this.config.allCategoryKey)
+                .flatMap(k => this.data[k] || []);
+        } else {
+            items = this.data[cat] || [];
+        }
+
+        if (!items.length) return;
+
+        this.currentItemIndex = (index + items.length) % items.length;
+        const item = items[this.currentItemIndex];
+
+        const modalImageContainer = document.querySelector('.modal-image-container');
+        if (modalImageContainer) {
+            const isImage = !!item.image;
+            if (isImage) {
+                const isQR = (item.image || '').toLowerCase().includes('qr') ||
+                             (item.title || '').toLowerCase().includes('qr');
+                const objectFit = isQR ? 'contain' : 'cover';
+                const background = isQR ? 'linear-gradient(135deg, #fbbf24, #f59e0b)' : 'transparent';
+                const oldEmoji = modalImageContainer.querySelector('.modal-emoji');
+                if (oldEmoji) oldEmoji.remove();
+                let img = modalImageContainer.querySelector('img.modal-img');
+                if (!img) {
+                    img = document.createElement('img');
+                    img.className = 'modal-img';
+                    modalImageContainer.insertBefore(img, modalImageContainer.firstChild);
+                }
+                img.src = item.image;
+                img.alt = item.title || '';
+                img.style.cssText = `width:100%;height:100%;object-fit:${objectFit};object-position:center;background:${background};`;
+            } else {
+                const oldImg = modalImageContainer.querySelector('img.modal-img');
+                if (oldImg) oldImg.remove();
+                let emojiEl = modalImageContainer.querySelector('.modal-emoji');
+                if (!emojiEl) {
+                    emojiEl = document.createElement('div');
+                    emojiEl.className = 'modal-emoji';
+                    modalImageContainer.insertBefore(emojiEl, modalImageContainer.firstChild);
+                }
+                emojiEl.textContent = item.emoji || '🍽️';
+            }
+        }
+
+        const modalTitle       = document.getElementById('modalTitle');
+        const modalPrice       = document.getElementById('modalPrice');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalTags        = document.getElementById('modalTags');
+        const counter          = document.getElementById('modalCounter');
+
+        if (modalTitle) modalTitle.textContent = item.title || '';
+
+        if (modalPrice) {
+            if (item.price && (Array.isArray(item.price) ? item.price.length : item.price.trim())) {
+                modalPrice.innerHTML = this.formatPrice(item.price, item.priceLabels);
+                modalPrice.style.display = 'block';
+            }else {
+                modalPrice.style.display = 'none';
+            }
+        }
+
+        if (modalDescription) {
+            const { primary, secondary } = this.pickModalDescriptions(item);
+
+            if (primary) {
+                modalDescription.textContent = primary;
+                modalDescription.style.display = 'block';
+            } else {
+                modalDescription.style.display = 'none';
+            }
+
+            // Segunda descripción (traducción) — elemento hermano creado on-demand
+            let secondaryEl = document.getElementById('modalDescriptionSecondary');
+            if (secondary) {
+                if (!secondaryEl) {
+                    secondaryEl = document.createElement('p');
+                    secondaryEl.id = 'modalDescriptionSecondary';
+                    secondaryEl.className = 'modal-description-secondary';
+                    modalDescription.parentNode.insertBefore(secondaryEl, modalDescription.nextSibling);
+                }
+                secondaryEl.textContent = secondary;
+                secondaryEl.style.display = 'block';
+            } else if (secondaryEl) {
+                secondaryEl.style.display = 'none';
+            }
+        }
+
+        if (modalTags) {
+            if (item.tags && item.tags.length > 0) {
+                modalTags.innerHTML = '';
+                item.tags.forEach(tag => {
+                    const tagEl = document.createElement('span');
+                    tagEl.className = 'modal-tag';
+                    tagEl.textContent = tag;
+                    modalTags.appendChild(tagEl);
+                });
+                modalTags.style.display = 'flex';
+            } else {
+                modalTags.style.display = 'none';
+            }
+        }
+
+        // Mostrar modal si no está activo
+        const modal = document.getElementById(this.config.modalId);
+        if (modal && !modal.classList.contains('active')) {
+            this.scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            document.body.style.top = `-${this.scrollPosition}px`;
+            document.body.classList.add('modal-open');
+            modal.classList.add('active');
+        }
+
+        if (counter) counter.textContent = `${this.currentItemIndex + 1} / ${items.length}`;
+    }
+}

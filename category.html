@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#0A0A0A">
+    <meta name="color-scheme" content="dark">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categoría - Menú</title>
+    <link rel="stylesheet" href="assets/css/fonts.css">
+    <link rel="stylesheet" href="assets/css/menu-list.css">
+<style>
+        /* Ensure image container is the positioning context */
+        #modalImageContainer {
+            position: relative;
+        }
+
+        /* ── Scrim at bottom of image for dot contrast ── */
+        #modalImageContainer::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 72px;
+            background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* ── Swipe dots ── */
+        #modalDots {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            align-items: center;
+            gap: 5px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .mdot {
+            border-radius: 50%;
+            background: rgba(255,215,0,0.35);
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            flex-shrink: 0;
+        }
+        .mdot-a  { width: 8px;  height: 8px;  background: #FFD700; }
+        .mdot-1  { width: 6px;  height: 6px;  background: rgba(255,215,0,0.65); }
+        .mdot-2  { width: 4px;  height: 4px;  background: rgba(255,215,0,0.35); }
+        .mdot-3  { width: 3px;  height: 3px;  background: rgba(255,215,0,0.2);  }
+
+        /* Suppress Android WebView share/callout overlay on modal image */
+        #modalImageContainer img,
+        #modalImageContainer {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* ── First-time swipe hint ── */
+        #swipeHint {
+            position: absolute;
+            bottom: 62px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            z-index: 20;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        #swipeHint.visible {
+            display: flex;
+            animation: swipeHintLifecycle 2s ease forwards;
+        }
+        .swipe-hint-inner {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 24px;
+            padding: 7px 18px;
+            color: #fff;
+            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+        .swipe-hint-arrow-l,
+        .swipe-hint-arrow-r {
+            font-size: 17px;
+            line-height: 1;
+        }
+        .swipe-hint-arrow-l { animation: nudgeLeft  0.55s ease-in-out infinite; }
+        .swipe-hint-arrow-r { animation: nudgeRight 0.55s ease-in-out infinite; }
+
+        @keyframes swipeHintLifecycle {
+            0%   { opacity: 0; }
+            15%  { opacity: 1; }
+            75%  { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        @keyframes nudgeLeft  {
+            0%, 100% { transform: translateX(0); }
+            50%       { transform: translateX(-4px); }
+        }
+        @keyframes nudgeRight {
+            0%, 100% { transform: translateX(0); }
+            50%       { transform: translateX(4px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <div class="header">
+        <button class="back-button" onclick="window.location.href='menu.html'"></button>
+        <h1 class="header-title" id="pageTitle">Cargando...</h1>
+        <span></span>
+    </div>
+
+    <!-- CATEGORIES (subcategorías si las hay) -->
+    <div class="categories">
+        <div class="category-scroll" id="categoryScroll"></div>
+    </div>
+
+    <!-- LIST -->
+    <div class="container">
+        <h2 class="section-title" id="sectionTitle" style="display:none;"></h2>
+        <div class="menu-list" id="menuList"></div>
+    </div>
+
+    <button id="scrollToTop" class="scroll-to-top" onclick="if(window.menuEngine) window.menuEngine.scrollToTop()">↑</button>
+
+    <!-- MODAL -->
+    <div id="dishModal" class="modal-overlay">
+        <div class="modal-container">
+            <button class="modal-close" onclick="if(window.menuEngine) window.menuEngine.closeModal()">&times;</button>
+
+            <div class="modal-image-container" id="modalImageContainer">
+                <div class="modal-emoji" id="modalEmoji">🍽️</div>
+                <!-- Telescope dots — overlaid on scrim at bottom of image -->
+                <div id="modalDots"></div>
+                <!-- First-time swipe hint -->
+                <div id="swipeHint">
+                    <div class="swipe-hint-inner">
+                        <span class="swipe-hint-arrow-l">‹</span>
+                        <span>desliza para navegar</span>
+                        <span class="swipe-hint-arrow-r">›</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-accent"></div>
+
+            <div class="modal-content">
+                <div class="modal-tags" id="modalTags"></div>
+                <h2 class="modal-title" id="modalTitle"></h2>
+                <p class="modal-description" id="modalDescription"></p>
+                <div class="modal-price" id="modalPrice"></div>
+            </div>
+            <!-- Counter fuera del image-container para que se posicione respecto al modal-container -->
+            <div class="modal-counter" id="modalCounter">1 / 1</div>
+        </div>
+    </div>
+
+    <script src="data/snapshot.js"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/db.js"></script>
+    <script src="assets/js/adapter.js"></script>
+    <script src="assets/js/menu-engine.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+
+        // ── Swipe navigation ────────────────────────────────────────────────
+        var _swipeStartX = 0, _swipeStartY = 0;
+        var imgContainer = document.getElementById('modalImageContainer');
+        imgContainer.addEventListener('touchstart', function(e) {
+            _swipeStartX = e.touches[0].clientX;
+            _swipeStartY = e.touches[0].clientY;
+        }, { passive: true });
+        imgContainer.addEventListener('touchend', function(e) {
+            var dx = e.changedTouches[0].clientX - _swipeStartX;
+            var dy = e.changedTouches[0].clientY - _swipeStartY;
+            if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50 && window.menuEngine) {
+                window.menuEngine.openModalByIndex(window.menuEngine.currentItemIndex + (dx < 0 ? 1 : -1));
+            }
+        }, { passive: true });
+
+        // ── Telescope dots ───────────────────────────────────────────────────
+        function updateDots() {
+            var counter = document.getElementById('modalCounter');
+            var dotsEl  = document.getElementById('modalDots');
+            if (!counter || !dotsEl) return;
+
+            var match = counter.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+            if (!match) return;
+
+            var current = parseInt(match[1]) - 1; // 0-indexed
+            var total   = parseInt(match[2]);
+
+            if (total <= 1) { dotsEl.style.display = 'none'; return; }
+            dotsEl.style.display = 'flex';
+            dotsEl.innerHTML = '';
+
+            var MAX = 7, half = 3;
+            var start = Math.max(0, current - half);
+            var end   = Math.min(total - 1, start + MAX - 1);
+            start = Math.max(0, end - MAX + 1);
+
+            for (var i = start; i <= end; i++) {
+                var dot  = document.createElement('span');
+                var dist = Math.abs(i - current);
+                dot.className = 'mdot ' + (
+                    dist === 0 ? 'mdot-a' :
+                    dist === 1 ? 'mdot-1' :
+                    dist === 2 ? 'mdot-2' : 'mdot-3'
+                );
+                dotsEl.appendChild(dot);
+            }
+        }
+
+        // ── First-time swipe hint ────────────────────────────────────────────
+        var _swipeHintShown = false;
+        function maybeShowSwipeHint() {
+            if (_swipeHintShown) return;
+            _swipeHintShown = true;
+            var hint = document.getElementById('swipeHint');
+            if (!hint) return;
+            hint.classList.add('visible');
+            setTimeout(function() { hint.classList.remove('visible'); }, 2000);
+        }
+
+        // ── Data load ────────────────────────────────────────────────────────
+        const slug = location.hash.replace('#', '').trim();
+
+        if (!slug) {
+            document.getElementById('pageTitle').textContent = 'Categoría no encontrada';
+            document.getElementById('pageTitle').classList.add('is-ready');
+            document.getElementById('menuList').innerHTML =
+                '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:40px 20px;">No se especificó una categoría.</p>';
+            return;
+        }
+
+        const stored = await MenuDB.loadFast();
+
+        if (!stored || !stored.categories || !stored.categories.length) {
+            document.getElementById('pageTitle').textContent = 'Sin datos';
+            document.getElementById('pageTitle').classList.add('is-ready');
+            document.getElementById('menuList').innerHTML =
+                '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:40px 20px;">Sin datos disponibles.<br>Conecta a internet para sincronizar.</p>';
+            return;
+        }
+
+        const cat = stored.categories.find(c => c.slug === slug);
+        if (cat) {
+            document.getElementById('pageTitle').textContent = cat.name;
+            document.getElementById('pageTitle').classList.add('is-ready');
+            document.title = `${cat.name} - Menú`;
+        }
+
+        const { data, labels } = MenuAdapter.getCategoryData(stored.categories, slug);
+
+        if (!data || Object.keys(data).length === 0) {
+            document.getElementById('menuList').innerHTML =
+                '<p style="color:rgba(255,255,255,0.5);text-align:center;padding:40px 20px;">No hay platos disponibles en esta categoría.</p>';
+            return;
+        }
+
+        window.menuEngine = new MenuEngine({
+            data,
+            categoryLabels: labels,
+            showImages: true,
+            viewButtonText: 'VER',
+            // Config de idioma de descripciones — viaja dentro del objeto
+            // restaurant del sync (ver /api/public/sync/all)
+            menuConfig: (stored.restaurant && stored.restaurant.menuConfig) || {}
+        });
+
+        // Patch openModalByIndex to update dots + show hint
+        var _origOpen = window.menuEngine.openModalByIndex.bind(window.menuEngine);
+        window.menuEngine.openModalByIndex = function(index) {
+            _origOpen(index);
+            updateDots();
+            maybeShowSwipeHint();
+        };
+    });
+    </script>
+</body>
+</html>
+
+
