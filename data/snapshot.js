@@ -1,5 +1,5 @@
 // Generado por scripts/refresh.mjs — no editar a mano.
-// Fuente: https://salchipapa-admin.vercel.app — 2026-07-29T21:43:02.911Z
+// Fuente: https://salchipapa-admin.vercel.app — 2026-07-29T22:02:42.690Z
 window.__SNAPSHOT__ = {
   "version": 498,
   "restaurant": {
@@ -1838,6 +1838,14 @@ window.__SNAPSHOT__ = {
       "orderIndex": 3
     }
   ],
-  "generatedAt": "2026-07-29T21:43:02.911Z",
+  "appearance": {
+    "bgType": "image",
+    "bgColor": "#0A0A0A",
+    "bgImageUrl": "assets/img/menu-bg/fondo_el_rey.png",
+    "bgImageKey": null,
+    "accentColor": "#1A1A1A",
+    "slogan": "👑 El original aquí no hay inventos papi"
+  },
+  "generatedAt": "2026-07-29T22:02:42.690Z",
   "sourceUrl": "https://salchipapa-admin.vercel.app"
 };

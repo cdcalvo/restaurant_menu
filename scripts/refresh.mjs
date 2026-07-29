@@ -92,12 +92,20 @@ async function main() {
     }
   }
 
+  console.log('→ Apariencia (fondo del menú)...');
+  if (data.appearance) {
+    if (data.appearance.bgType === 'image' && data.appearance.bgImageUrl) {
+      data.appearance.bgImageUrl = await downloadOnce(data.appearance.bgImageUrl, cache);
+    }
+  }
+
   const snapshot = {
     version: data.version,
     restaurant: data.restaurant,
     categories: data.categories,
     carouselImages: data.carouselImages,
     qrCodes: data.qrCodes,
+    appearance: data.appearance,
     generatedAt: new Date().toISOString(),
     sourceUrl: PROD_URL,
   };
