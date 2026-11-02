@@ -10,6 +10,7 @@
     <script src="assets/js/appearance.js"></script>
 <link rel="stylesheet" href="assets/css/fonts.css">
     <link rel="stylesheet" href="assets/css/menu.css">
+    <link rel="stylesheet" href="assets/css/firma-menutab.css">
 </head>
 <body>
     <div class="container">
@@ -58,6 +59,21 @@
                         <!-- Generado dinámicamente desde Android.getQrCodes() -->
                     </div>
                     <p class="qr-blessing">✝︎ Este Menú fue Realizado con el Amor de Dios.<br>Dios te Bendiga 🙏</p>
+                    <!-- Firma de producto menutab (fuentes incrustadas en firma-menutab.css) -->
+                    <div class="tf" aria-label="menutab by Muisca Labs · Menú digital">
+                        <span class="tf__logo">
+                            <span class="mt">menu<span class="anc"><i class="swipe"></i></span>ta<svg class="mt-b" viewBox="0 -757 752.87 757" aria-hidden="true"><g fill="currentColor"><path transform="translate(185.88 -147.44) scale(0.62029)" d="M361 12Q305 12 257.5 -8.5Q210 -29 181 -69L195 -100V0H55V-757H205V-442L182 -472Q209 -513 255.5 -535.5Q302 -558 362 -558Q440 -558 503 -520Q566 -482 603 -417.5Q640 -353 640 -273Q640 -194 603.5 -129Q567 -64 504 -26Q441 12 361 12ZM343 -123Q385 -123 417 -142Q449 -161 467 -195Q485 -229 485 -273Q485 -317 467 -350.5Q449 -384 417 -403.5Q385 -423 343 -423Q303 -423 271.5 -404Q240 -385 222.5 -351Q205 -317 205 -273Q205 -229 222.5 -195Q240 -161 271.5 -142Q303 -123 343 -123Z"/></g><g fill="none" stroke="currentColor"><rect x="120" y="-717" width="562.87" height="677" rx="85" fill="none" stroke-width="80"/></g><circle class="mt-b__tap" cx="399.88" cy="-316.78" r="62.03"/></svg></span>
+                            <span class="tf__by"><span>By</span><svg viewBox="0 0 100 100" aria-hidden="true"><path d="M8 64 A42 42 0 0 1 92 64" fill="none" stroke-width="8"/><path d="M24 64 A26 26 0 0 1 76 64" fill="none" stroke-width="8"/><circle cx="50" cy="64" r="11"/><rect x="2" y="74" width="96" height="8" rx="4"/><rect x="24" y="88" width="52" height="8" rx="4"/></svg><span>Muisca Labs</span></span>
+                        </span>
+                        <span class="tf__rule"></span>
+                        <span class="tf__desc"><span class="tf__es">Menú digital</span><span class="tf__en">Digital Menu</span></span>
+                    </div>
+                    <!-- Contacto comercial de menutab: menu.js lo muestra si hay uno en
+                         Ajustes → Marca menutab (sin enlace: el kiosco no tiene navegador) -->
+                    <p class="tf-contacto" id="menutabContacto" hidden>
+                        <span class="tf-contacto__es">¿Te gusta este menú? Llévalo a tu restaurante · <span class="tf-contacto__mail" id="menutabEmail"></span></span>
+                        <span class="tf-contacto__en">Like this menu? Get it for yours</span>
+                    </p>
                 </div>
             </div>
             <!-- MODAL QR -->

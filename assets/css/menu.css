@@ -780,12 +780,7 @@ body::after {
   --card-bg:    color-mix(in srgb, var(--menu-accent, #1A1A1A) 85%, transparent);
 }
 
-
-
-
-
-
-
-
-
-
+/* ── Firma menutab (detalle en firma-menutab.css) ── */
+.tf {
+    margin-top: clamp(24px, 4vh, 36px);
+}
